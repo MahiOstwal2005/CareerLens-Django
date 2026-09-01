@@ -61,8 +61,8 @@ DATABASES = {
     }
 }
 
-MONGO_URI = 'mongodb+srv://kollurdevika_db_user:JNAjHMmw8DLoS6cB@careerlenscluster.lrrqyro.mongodb.net/'
-MONGO_DB_NAME = 'careerlens_db'
+MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME', 'careerlens_db')
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
