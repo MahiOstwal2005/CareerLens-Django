@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold display-5">Pricing Plans</h1>
+    <p class="text-muted lead">Choose the perfect plan for your career advancement.</p>
+  </div>
+  
+  <div class="row g-4 max-w-5xl mx-auto">
+    <!-- Free Tier -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 16px;">
+        <div class="card-body d-flex flex-column">
+          <h3 class="card-title fw-bold">Free</h3>
+          <p class="card-text text-muted mb-4">Basic resume analysis</p>
+          <h2 class="display-4 fw-bold text-primary mb-4">$0<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          <ul class="list-unstyled text-start mb-auto">
+            <li class="mb-2"><span class="text-success me-2">✓</span> ATS Score</li>
+            <li class="mb-2"><span class="text-success me-2">✓</span> Basic feedback</li>
+            <li class="mb-2 text-muted"><span class="me-2">✗</span> Detailed report</li>
+            <li class="mb-2 text-muted"><span class="me-2">✗</span> Priority support</li>
+          </ul>
+          <a href="#" class="btn btn-outline-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Current Plan</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pro Tier -->
+    <div class="col-md-4">
+      <div class="card h-100 border-2 border-primary shadow text-center p-4 position-relative" style="border-radius: 16px;">
+        <div class="position-absolute top-0 start-50 translate-middle badge bg-primary rounded-pill py-2 px-3">Recommended</div>
+        <div class="card-body d-flex flex-column">
+          <h3 class="card-title fw-bold">Pro</h3>
+          <p class="card-text text-muted mb-4">For serious job seekers</p>
+          <h2 class="display-4 fw-bold text-primary mb-4">$9.99<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          <ul class="list-unstyled text-start mb-auto">
+            <li class="mb-2"><span class="text-success me-2">✓</span> ATS Score</li>
+            <li class="mb-2"><span class="text-success me-2">✓</span> Detailed report</li>
+            <li class="mb-2"><span class="text-success me-2">✓</span> Resume suggestions</li>
+            <li class="mb-2 text-muted"><span class="me-2">✗</span> Personal coaching</li>
+          </ul>
+          <a href="#" class="btn btn-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Upgrade to Pro</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Premium Tier -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 16px;">
+        <div class="card-body d-flex flex-column">
+          <h3 class="card-title fw-bold">Premium</h3>
+          <p class="card-text text-muted mb-4">All-in-one career suite</p>
+          <h2 class="display-4 fw-bold text-primary mb-4">$29.99<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          <ul class="list-unstyled text-start mb-auto">
+            <li class="mb-2"><span class="text-success me-2">✓</span> Everything in Pro</li>
+            <li class="mb-2"><span class="text-success me-2">✓</span> Personal coaching</li>
+            <li class="mb-2"><span class="text-success me-2">✓</span> Cover-letter generator</li>
+            <li class="mb-2"><span class="text-success me-2">✓</span> Priority support</li>
+          </ul>
+          <a href="#" class="btn btn-outline-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Get Premium</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

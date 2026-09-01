@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerLens - AI Resume Analyzer</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+
+<!-- Enhancv Background Vector (Fixed) -->
+<img src="{% static 'img/enhancv_bg.svg' %}?v=1" alt="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; object-position: top center; z-index: -1; pointer-events: none;">
+
+<nav class="navbar navbar-expand-lg sticky-top bg-white">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'home' %}{% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="me-2 text-primary"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span class="fw-bolder">CareerLens</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto ps-lg-4">
+                <!-- Removed dummy links for a cleaner look -->
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center">
+    <li class="nav-item">
+        <a class="nav-link fw-semibold px-3" href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link fw-semibold px-3" href="{% url 'history' %}">History</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link fw-semibold px-3" href="{% url 'pricing' %}">Pricing</a>
+    </li>
+    <li class="nav-item">
+        <a class="btn btn-outline-primary fw-bold mx-2" href="{% url 'upload_resume' %}">Upload Resume</a>
+    </li>
+                {% if user.is_authenticated %}
+    <li class="nav-item">
+        <form method="POST" action="{% url 'logout' %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn nav-link text-danger fw-semibold border-0 bg-transparent px-3">Logout</button>
+        </form>
+    </li>
+{% else %}
+    <li class="nav-item"><a class="nav-link fw-bold px-4" href="{% url 'login' %}">Sign In</a></li>
+    <li class="nav-item"><a class="btn btn-primary fw-bold px-4 py-2 ms-2 rounded-pill shadow-sm" href="{% url 'register' %}">Get Started</a></li>
+{% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow-1">
+    <div class="container my-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm rounded-3" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-white border-top pt-5 pb-4 mt-auto">
+    <div class="container pt-4">
+        <div class="row g-4 mb-5">
+            <div class="col-6 col-md-3">
+                <h6 class="fw-bold mb-4 text-dark">Tools & Features</h6>
+                <ul class="list-unstyled text-muted small lh-lg">
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Create Resume</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">AI Resume Builder</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">ATS Resume Checker</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">One-click Resume Tailor</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Cover Letter Generator</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">AI Job Board</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md-3">
+                <h6 class="fw-bold mb-4 text-dark">Resume & Cover Letters</h6>
+                <ul class="list-unstyled text-muted small lh-lg">
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Resume Examples</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Resume Templates</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Resume Skills</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Cover Letter Examples</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Cover Letter Templates</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md-3">
+                <h6 class="fw-bold mb-4 text-dark">Resources</h6>
+                <ul class="list-unstyled text-muted small lh-lg">
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Original Studies & Research</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Help Desk</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Blog</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">ATS Resource Hub</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md-3">
+                <h6 class="fw-bold mb-4 text-dark">Company</h6>
+                <ul class="list-unstyled text-muted small lh-lg">
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">About</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Careers</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Privacy Policy</a></li>
+                    <li><a href="#" class="text-decoration-none text-muted footer-link">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-top pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div class="d-flex align-items-center mb-3 mb-md-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary me-2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span class="fw-bold">CareerLens</span>
+            </div>
+            <small class="text-muted">Made with love by people who care. © 2026. All rights reserved.</small>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #2DC08D; /* Enhancv Green */
+    --primary-hover: #23a075;
+    --dark: #1F2937;
+    --light: #F3F4F6;
+    --surface: #FFFFFF;
+    --text-muted: #6B7280;
+    --border: #E5E7EB;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: #F8FAFC;
+    background-image: url('../img/enhancv_bg.svg');
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% auto;
+    color: var(--dark);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--surface) !important;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    color: var(--primary) !important;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: var(--dark) !important;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary) !important;
+}
+
+/* Cards */
+.card {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    border-radius: 8px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--border);
+    color: var(--dark);
+    border-radius: 8px;
+    font-weight: 600;
+    background-color: var(--surface);
+}
+
+.btn-outline-primary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: var(--light);
+}
+
+/* Forms */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    background-color: var(--surface);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(45, 192, 141, 0.2);
+    border-color: var(--primary);
+}
+
+/* Upload Box */
+.upload-zone {
+    border: 2px dashed var(--border);
+    background-color: var(--surface);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary);
+    background-color: #F0FDF4; /* Very light green */
+}
+
+/* Score Gauge */
+.gauge-container {
+    position: relative;
+    width: 200px;
+    height: 100px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.gauge-background, .gauge-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 20px solid var(--border);
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    transform: rotate(45deg);
+}
+
+.gauge-fill {
+    border-color: var(--primary) transparent transparent var(--primary);
+    transition: transform 1s ease-out;
+}
+
+.gauge-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+/* Badges */
+.keyword-badge {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 4px;
+    display: inline-block;
+}
+
+.badge-matched {
+    background-color: #DEF7EC;
+    color: #03543F;
+    border: 1px solid #31C48D;
+}
+
+.badge-missing {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+    border: 1px solid #F98080;
+}
+
+/* Typography Helpers */
+.hero-heading {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--dark);
+    letter-spacing: -0.02em;
+}
+
+.hero-subheading {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* Marketing Utilities */
+.max-w-700 {
+    max-width: 700px;
+}
+
+.footer-link {
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: var(--primary) !important;
+}
+
+.feature-mockup {
+    transition: transform 0.3s ease;
+}
+
+.feature-mockup:hover {
+    transform: translateY(-5px);
+}

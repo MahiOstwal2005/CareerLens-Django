@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4 my-4 animate-fade-in">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 pb-3 border-bottom">
+        <div>
+            <h1 class="fw-bold mb-2" style="font-size: 2.2rem; letter-spacing: -0.5px;">Detailed Analysis Report</h1>
+            <p class="text-muted fs-5 mb-0">For resume: <strong>{{ resume.file.name|slice:"8:" }}</strong></p>
+        </div>
+        <div class="mt-4 mt-md-0">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-4 me-2">Back to Dashboard</a>
+            <a href="{{ resume.file.url }}" target="_blank" class="btn btn-primary px-4">View Resume</a>
+        </div>
+    </div>
+
+    <!-- Main Score & Summary -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="card p-4 p-md-5 h-100 text-center d-flex flex-column justify-content-center border-0 shadow-sm rounded-4" style="background: linear-gradient(145deg, #ffffff, #f9fafb);">
+                <h5 class="fw-bold mb-4 text-dark">ATS Compatibility Score</h5>
+                
+                <div class="gauge-container mb-3 mx-auto">
+                    <div class="gauge-background"></div>
+                    <div class="gauge-fill" id="gaugeFill" style="transform: rotate(45deg);"></div>
+                    <div class="gauge-text" id="gaugeText">0%</div>
+                </div>
+                
+                <div class="mt-4">
+                    {% if ats_result.score >= 80 %}
+                        <div class="badge bg-success bg-opacity-10 text-success px-4 py-2 fs-6 w-100 rounded-pill border border-success">Excellent Match</div>
+                    {% elif ats_result.score >= 50 %}
+                        <div class="badge bg-warning bg-opacity-10 text-warning px-4 py-2 fs-6 w-100 rounded-pill border border-warning">Needs Improvement</div>
+                    {% else %}
+                        <div class="badge bg-danger bg-opacity-10 text-danger px-4 py-2 fs-6 w-100 rounded-pill border border-danger">Low Compatibility</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="card p-4 p-md-5 h-100 border-0 shadow-sm rounded-4 bg-white">
+                <h4 class="fw-bold mb-4 d-flex align-items-center text-dark">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    AI Feedback Summary
+                </h4>
+                <p class="fs-5 text-muted mb-4" style="line-height: 1.7;">{{ ats_result.feedback|linebreaksbr }}</p>
+                
+                <div class="row mt-auto g-3">
+                    <div class="col-sm-6">
+                        <div class="bg-light p-3 rounded-3 border">
+                            <span class="text-muted d-block small mb-1 fw-bold text-uppercase">Matched Keywords</span>
+                            <span class="fs-4 fw-bold text-success">{{ ats_result.matched_keywords|length }}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="bg-light p-3 rounded-3 border">
+                            <span class="text-muted d-block small mb-1 fw-bold text-uppercase">Missing Keywords</span>
+                            <span class="fs-4 fw-bold text-danger">{{ ats_result.missing_keywords|length }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Dimension Breakdown -->
+    {% if detailed_report %}
+    <h3 class="fw-bold mb-4 mt-5">Detailed Score Breakdown</h3>
+    <div class="row g-4">
+        
+        <!-- Experience -->
+        <div class="col-md-6">
+            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        Experience & Impact
+                    </h5>
+                    <span class="badge bg-{{ detailed_report.experience.status }} fs-6">{{ detailed_report.experience.score }} / {{ detailed_report.experience.max_score }}</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-{{ detailed_report.experience.status }}" role="progressbar" style="width: {% widthratio detailed_report.experience.score detailed_report.experience.max_score 100 %}%;"></div>
+                </div>
+                <p class="text-muted mb-0">{{ detailed_report.experience.feedback }}</p>
+            </div>
+        </div>
+
+        <!-- Technical Skills -->
+        <div class="col-md-6">
+            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Technical Skills
+                    </h5>
+                    <span class="badge bg-{{ detailed_report.technical_skills.status }} fs-6">{{ detailed_report.technical_skills.score }} / {{ detailed_report.technical_skills.max_score }}</span>
+                </div>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar bg-{{ detailed_report.technical_skills.status }}" role="progressbar" style="width: {% widthratio detailed_report.technical_skills.score detailed_report.technical_skills.max_score 100 %}%;"></div>
+                </div>
+                <p class="text-muted mb-0">{{ detailed_report.technical_skills.feedback }}</p>
+                <div class="mt-3 small">
+                    <span class="fw-semibold">Missing:</span> 
+                    <span class="text-danger">{{ ats_result.missing_keywords|join:", " }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Soft Skills -->
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                        Soft Skills
+                    </h5>
+                    <span class="badge bg-{{ detailed_report.soft_skills.status }}">{{ detailed_report.soft_skills.score }}/{{ detailed_report.soft_skills.max_score }}</span>
+                </div>
+                <div class="progress mb-3" style="height: 6px;">
+                    <div class="progress-bar bg-{{ detailed_report.soft_skills.status }}" style="width: {% widthratio detailed_report.soft_skills.score detailed_report.soft_skills.max_score 100 %}%;"></div>
+                </div>
+                <p class="text-muted small mb-0">{{ detailed_report.soft_skills.feedback }}</p>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                        Education
+                    </h5>
+                    <span class="badge bg-{{ detailed_report.education.status }}">{{ detailed_report.education.score }}/{{ detailed_report.education.max_score }}</span>
+                </div>
+                <div class="progress mb-3" style="height: 6px;">
+                    <div class="progress-bar bg-{{ detailed_report.education.status }}" style="width: {% widthratio detailed_report.education.score detailed_report.education.max_score 100 %}%;"></div>
+                </div>
+                <p class="text-muted small mb-0">{{ detailed_report.education.feedback }}</p>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm rounded-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                        Objectives
+                    </h5>
+                    <span class="badge bg-{{ detailed_report.objectives.status }}">{{ detailed_report.objectives.score }}/{{ detailed_report.objectives.max_score }}</span>
+                </div>
+                <div class="progress mb-3" style="height: 6px;">
+                    <div class="progress-bar bg-{{ detailed_report.objectives.status }}" style="width: {% widthratio detailed_report.objectives.score detailed_report.objectives.max_score 100 %}%;"></div>
+                </div>
+                <p class="text-muted small mb-0">{{ detailed_report.objectives.feedback }}</p>
+            </div>
+        </div>
+        
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-5 border-0 shadow-sm rounded-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        Detailed breakdown is only available for resumes uploaded after the recent system update. Please upload your resume again to see the full detailed report.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const score = {{ ats_result.score }};
+        const gaugeFill = document.getElementById('gaugeFill');
+        const gaugeText = document.getElementById('gaugeText');
+        
+        // Map 0-100 to 45deg to 225deg for the gauge fill
+        const degrees = 45 + (score * 1.8); 
+        
+        setTimeout(() => {
+            gaugeFill.style.transform = `rotate(${degrees}deg)`;
+            
+            // Determine color based on score
+            let color = '#ef4444'; // red
+            if (score >= 80) color = '#10b981'; // green
+            else if (score >= 50) color = '#f59e0b'; // yellow
+            
+            gaugeFill.style.borderColor = `${color} transparent transparent ${color}`;
+            gaugeText.style.color = color;
+            
+            // Animate number
+            let current = 0;
+            const timer = setInterval(() => {
+                current += 1;
+                if (current >= score) {
+                    current = score;
+                    clearInterval(timer);
+                }
+                gaugeText.innerText = current + '%';
+            }, 10);
+            
+        }, 300);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<div class="container min-vh-75 mt-4 mt-lg-5 animate-fade-in mb-5 pb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 pe-lg-5 mb-5 mb-lg-0">
+            <span class="text-uppercase fw-bold text-primary mb-3 d-block" style="letter-spacing: 1px;">Resume Checker</span>
+            <h1 class="hero-heading mb-4">Is your resume good enough?</h1>
+            <p class="hero-subheading mb-4">A free and fast AI resume checker doing 27 crucial checks to ensure your resume’s content, layout and design is technically compatible with the applicant tracking systems and get you interview callbacks.</p>
+            
+            <ul class="list-unstyled mb-5">
+                <li class="d-flex align-items-center mb-3">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span class="fs-5">Instant ATS Score</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span class="fs-5">Skill Gap Analysis</span>
+                </li>
+                <li class="d-flex align-items-center">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span class="fs-5">Actionable Feedback</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card p-4 p-md-5 shadow-lg border-0" style="border-radius: 20px;">
+                <div class="upload-zone mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary mb-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <h4 class="fw-bold mb-2">Drop your resume here or choose a file.</h4>
+                    <p class="text-muted mb-4">PDF & DOCX only. Max 2MB file size.</p>
+                    
+                    {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'upload_resume' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 py-3" style="font-size: 1.1rem;">Upload Your Resume</button>
+                    </form>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <p class="mb-4 text-muted">Please sign in or create an account to upload your resume for AI analysis.</p>
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-lg w-100 py-3" style="font-size: 1.1rem;">Login to Upload</a>
+                        <p class="mt-4 mb-0 text-muted small">Don't have an account? <a href="{% url 'register' %}" class="text-primary text-decoration-none fw-bold">Sign up here</a></p>
+                    </div>
+                    {% endif %}
+                </div>
+                <p class="text-center text-muted small mb-0">🔒 We never share your data with 3rd parties or use it for AI model training.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 27 CHECKS SECTION -->
+<div class="container py-5 my-5">
+    <div class="text-center mb-5 max-w-700 mx-auto">
+        <h2 class="fw-bold mb-4" style="font-size: 2.5rem; letter-spacing: -1px;">The AI-powered Resume Checker goes beyond typos and punctuation</h2>
+        <p class="text-muted fs-5">We’ve built in various AI models to check your resume against what both ATS software and human recruiters look for. The tool checks for 27 crucial things across seven different categories on your resume.</p>
+    </div>
+    
+    <div class="row g-4 mt-4">
+        <!-- ATS Essentials -->
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+                <div class="mb-3"><span class="badge bg-light text-primary p-2 px-3 rounded-pill">ATS essentials</span></div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>File format and size</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>ATS-friendly design</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Professional email address</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Header links compliance</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Resume Sections -->
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+                <div class="mb-3"><span class="badge bg-light text-primary p-2 px-3 rounded-pill">Resume sections</span></div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Essential sections</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Contact information</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Section order</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Resume file name</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Content -->
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+                <div class="mb-3"><span class="badge bg-light text-primary p-2 px-3 rounded-pill">Content</span></div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>ATS parse rate</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Quantifying impact</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Spelling and grammar</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Bullet length consistency</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Job Tailoring -->
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+                <div class="mb-3"><span class="badge bg-light text-primary p-2 px-3 rounded-pill">Job tailoring</span></div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Hard skills match</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Soft skills match</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Action verbs</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Tailored job title</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Recruiter red flags -->
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+                <div class="mb-3"><span class="badge bg-light text-primary p-2 px-3 rounded-pill">Recruiter red flags</span></div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Resume credibility</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Interview risk signals</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Peer benchmarking</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>LinkedIn profile match</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Bias & discrimination -->
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-0 shadow-sm rounded-4">
+                <div class="mb-3"><span class="badge bg-light text-primary p-2 px-3 rounded-pill">Bias & discrimination</span></div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Age and date bias</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Employment gaps</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Seniority & impact</li>
+                    <li class="mb-2 d-flex"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="text-success me-2 mt-1 flex-shrink-0" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>Career progression</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: ATS UNDERSTANDING -->
+<div class="bg-white py-5 border-top border-bottom">
+    <div class="container py-5 my-3">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0 order-2 order-lg-1">
+                <div class="feature-mockup bg-light rounded-4 shadow-sm p-4 border" style="height: 400px; position: relative; overflow: hidden;">
+                    <!-- Minimal abstract representation of ATS scanning -->
+                    <div class="d-flex flex-column h-100 justify-content-center align-items-center opacity-75">
+                        <div class="w-75 bg-white shadow-sm p-3 rounded mb-3 border">
+                            <div class="bg-light rounded w-50 h-2 mb-2" style="height: 10px;"></div>
+                            <div class="bg-light rounded w-75 h-2" style="height: 10px;"></div>
+                        </div>
+                        <div class="w-75 bg-white shadow-sm p-3 rounded mb-3 border border-primary">
+                            <div class="d-flex justify-content-between mb-2">
+                                <div class="bg-light rounded w-50" style="height: 10px;"></div>
+                                <div class="badge bg-primary px-2 py-1" style="font-size: 0.6rem;">Parsed</div>
+                            </div>
+                            <div class="bg-light rounded w-100" style="height: 10px;"></div>
+                        </div>
+                        <div class="w-75 bg-white shadow-sm p-3 rounded border">
+                            <div class="bg-light rounded w-25 h-2 mb-2" style="height: 10px;"></div>
+                            <div class="bg-light rounded w-50 h-2" style="height: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1 order-1 order-lg-2">
+                <h2 class="fw-bold mb-4">Get an ATS understanding check</h2>
+                <p class="text-muted fs-5 mb-4">Part of the resume checker score we assign is based on the parsability rate of your resume. We’ve reverse-engineered the most popular applicant tracking systems currently used, such as BambooHR, Greenhouse, Lever, SAP SuccessFactors and Workday, and we look for signs of ATS compatibility.</p>
+                <p class="text-muted fs-5">For each resume uploaded, we look for skills and keywords connected to the job and industry you’re applying for, readable contact information, date format, links, file type, and length. Then, we’ll give you suggestions on how to improve your resume.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: TAILOR RESUME -->
+<div class="container py-5 my-5">
+    <div class="row align-items-center">
+        <div class="col-lg-5 mb-4 mb-lg-0 pe-lg-5">
+            <h2 class="fw-bold mb-4">Tailor your resume to a job description</h2>
+            <p class="text-muted fs-5 mb-4">Paste the job you’re applying for and our checker will give you job-specific resume tailoring suggestions. It will identify exactly which skills and keywords you already have or are missing from your resume.</p>
+            <p class="text-muted fs-5">Additionally, it will generate an application-ready tailored subtitle and suggest action verbs for your bullet points to be more effective.</p>
+        </div>
+        <div class="col-lg-6 offset-lg-1">
+            <div class="feature-mockup bg-light rounded-4 shadow-sm p-4 border" style="height: 400px; position: relative; overflow: hidden;">
+                <!-- Minimal abstract representation of keywords -->
+                <div class="d-flex flex-column h-100 justify-content-center">
+                    <h5 class="fw-bold mb-3">Missing Keywords</h5>
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="badge bg-white text-danger border border-danger px-3 py-2 rounded-pill shadow-sm">Product Management</span>
+                        <span class="badge bg-white text-danger border border-danger px-3 py-2 rounded-pill shadow-sm">Agile</span>
+                        <span class="badge bg-white text-danger border border-danger px-3 py-2 rounded-pill shadow-sm">Scrum</span>
+                    </div>
+                    <h5 class="fw-bold mb-3">Found Keywords</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-white text-success border border-success px-3 py-2 rounded-pill shadow-sm">Python</span>
+                        <span class="badge bg-white text-success border border-success px-3 py-2 rounded-pill shadow-sm">Data Analysis</span>
+                        <span class="badge bg-white text-success border border-success px-3 py-2 rounded-pill shadow-sm">SQL</span>
+                        <span class="badge bg-white text-success border border-success px-3 py-2 rounded-pill shadow-sm">Machine Learning</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURE: HIRING MANAGER -->
+<div class="bg-white py-5 border-top border-bottom">
+    <div class="container py-5 my-3">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0 order-2 order-lg-1">
+                <div class="feature-mockup bg-light rounded-4 shadow-sm p-4 border" style="height: 400px; position: relative; overflow: hidden;">
+                    <!-- Minimal abstract representation of feedback -->
+                    <div class="d-flex flex-column h-100 justify-content-center px-4">
+                        <div class="bg-white shadow p-4 rounded-4 border-start border-4 border-warning mb-3">
+                            <h6 class="fw-bold text-dark mb-2">Quantify Your Impact</h6>
+                            <p class="text-muted small mb-0">Instead of "Led a team", try "Led a team of 15 engineers to deliver 3 major features."</p>
+                        </div>
+                        <div class="bg-white shadow p-4 rounded-4 border-start border-4 border-primary">
+                            <h6 class="fw-bold text-dark mb-2">Avoid Ambiguous Claims</h6>
+                            <p class="text-muted small mb-0">Clarify the specific tools or methodologies used in your previous role to increase credibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1 order-1 order-lg-2">
+                <h2 class="fw-bold mb-4">Pass the hiring manager check</h2>
+                <p class="text-muted fs-5 mb-4">ATS is just the first step of the recruitment process. Your resume will be judged by a HR manager next and they look for an entirely different set of things. Our checker will analyze your resume for any red flags, such as ambiguity, unintentional age bias, interview risks, leadership signals, skills evidence, and role experience relevance.</p>
+                <p class="text-muted fs-5">Then it will provide actionable tips against criteria that recruiters care about, such as impact, credibility, and quality of your writing.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REVIEWS SECTION -->
+<div class="container py-5 my-5 text-center">
+    <div class="mb-5">
+        <h2 class="fw-bold mb-3">Trusted by executives & senior professionals</h2>
+        <div class="d-flex align-items-center justify-content-center mb-2">
+            <span class="fs-4 text-warning me-2">★★★★★</span>
+            <span class="fs-5 fw-bold">4.5 Rating</span>
+        </div>
+        <p class="text-muted">5,309 happy customers shared their experience.</p>
+    </div>
+    
+    <div class="row g-4 text-start">
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm h-100 bg-white">
+                <div class="d-flex text-warning mb-3">★★★★★</div>
+                <p class="fw-medium mb-4 flex-grow-1">"So far working very well! Intuitive and able to make changes quickly, with great AI supported suggestions!"</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-dark">Anonymous</span>
+                    <small class="text-muted">13 hours ago</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm h-100 bg-white">
+                <div class="d-flex text-warning mb-3">★★★★★</div>
+                <p class="fw-medium mb-4 flex-grow-1">"Simple product to use with basic computer skills. Excellent customer support. Landed my job and I will definitely use again in the future and recommend to others."</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-dark">Stephen</span>
+                    <small class="text-muted">2 days ago</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border-0 shadow-sm h-100 bg-white">
+                <div class="d-flex text-warning mb-3">★★★★★</div>
+                <p class="fw-medium mb-4 flex-grow-1">"I loved the experience it is so good. Thank you. Great experience working with your platform."</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-dark">Sofoniyas</span>
+                    <small class="text-muted">1 day ago</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

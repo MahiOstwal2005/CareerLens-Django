@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mb-5 pb-5">
+    <div class="row align-items-center min-vh-75 mt-4 mt-lg-5 animate-fade-in">
+        <div class="col-lg-6 pe-lg-5 mb-5 mb-lg-0">
+            <span class="text-uppercase fw-bold text-primary mb-2 d-block" style="letter-spacing: 1px;">Resume Checker</span>
+            <h1 class="hero-heading mb-4">Is your resume good enough?</h1>
+            <p class="hero-subheading mb-4">A free and fast AI resume checker doing 27 crucial checks to ensure your resume’s content, layout and design is technically compatible with the applicant tracking systems and get you interview calls.</p>
+            
+            <ul class="list-unstyled mb-5">
+                <li class="d-flex align-items-center mb-3">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span class="fs-5">Instant ATS Score</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span class="fs-5">Skill Gap Analysis</span>
+                </li>
+                <li class="d-flex align-items-center">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" class="text-primary me-3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <span class="fs-5">Actionable Feedback</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card p-4 p-md-5 shadow-lg border-0" style="border-radius: 20px;">
+                <div class="upload-zone mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary mb-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <h4 class="fw-bold mb-2">Upload your resume</h4>
+                    <p class="text-muted mb-4">Select a file to check your score</p>
+                    
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <small class="text-muted d-block mt-2">Supported formats: PDF, DOCX</small>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 py-3" style="font-size: 1.1rem;">Check My Resume</button>
+                    </form>
+                </div>
+                <p class="text-center text-muted small mb-0">🔒 Your data is secure and completely private.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

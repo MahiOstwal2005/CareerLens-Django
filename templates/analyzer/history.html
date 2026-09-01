@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Your Resume History</h2>
+    <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 fw-semibold">Upload New</a>
+  </div>
+  
+  {% if resumes %}
+  <div class="row g-4">
+    {% for resume in resumes %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 border-0 shadow-sm hover-shadow transition-all" style="border-radius: 12px;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5 class="card-title text-truncate fw-bold mb-0" title="{{ resume.filename }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2 text-primary"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              {{ resume.filename }}
+            </h5>
+          </div>
+          <p class="text-muted small mb-3">
+            Uploaded on {{ resume.uploaded_at|date:"M d, Y" }}
+          </p>
+          
+          {% if resume.atsresult_set.first %}
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="small fw-semibold text-secondary">ATS Score</span>
+              <span class="fw-bold {% if resume.atsresult_set.first.score >= 80 %}text-success{% elif resume.atsresult_set.first.score >= 50 %}text-warning{% else %}text-danger{% endif %}">
+                {{ resume.atsresult_set.first.score }}/100
+              </span>
+            </div>
+            <div class="progress" style="height: 8px; border-radius: 4px;">
+              <div class="progress-bar {% if resume.atsresult_set.first.score >= 80 %}bg-success{% elif resume.atsresult_set.first.score >= 50 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ resume.atsresult_set.first.score }}%;" aria-valuenow="{{ resume.atsresult_set.first.score }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+          {% endif %}
+          
+          <div class="d-grid mt-auto">
+            <a href="{% url 'result' resume.pk %}" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold">View Full Report</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center py-5 bg-white shadow-sm rounded-4 border-0">
+    <div class="mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-muted opacity-50"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+    </div>
+    <h4 class="fw-bold">No Resumes Found</h4>
+    <p class="text-muted mb-4">You haven't uploaded any resumes yet. Get started by analyzing your first one!</p>
+    <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold">Upload Your First Resume</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
