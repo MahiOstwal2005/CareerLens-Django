@@ -7,11 +7,11 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 pb-3 border-bottom">
         <div>
             <h1 class="fw-bold mb-2" style="font-size: 2.2rem; letter-spacing: -0.5px;">Detailed Analysis Report</h1>
-            <p class="text-muted fs-5 mb-0">For resume: <strong>{{ resume.file.name|slice:"8:" }}</strong></p>
+            <p class="text-muted fs-5 mb-0">For {{ resume.get_doc_type_display|lower }}: <strong>{{ resume.file.name|slice:"8:" }}</strong></p>
         </div>
         <div class="mt-4 mt-md-0">
             <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-4 me-2">Back to Dashboard</a>
-            <a href="{{ resume.file.url }}" target="_blank" class="btn btn-primary px-4">View Resume</a>
+            <a href="{{ resume.file.url }}" target="_blank" class="btn btn-primary px-4">View Document</a>
         </div>
     </div>
 
@@ -76,7 +76,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        Experience & Impact
+                        {% if resume.doc_type == 'portfolio' %}Projects & Case Studies{% else %}Experience & Impact{% endif %}
                     </h5>
                     <span class="badge bg-{{ detailed_report.experience.status }} fs-6">{{ detailed_report.experience.score }} / {{ detailed_report.experience.max_score }}</span>
                 </div>
@@ -93,7 +93,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                        Technical Skills
+                        {% if resume.doc_type == 'portfolio' %}Technical Depth{% else %}Technical Skills{% endif %}
                     </h5>
                     <span class="badge bg-{{ detailed_report.technical_skills.status }} fs-6">{{ detailed_report.technical_skills.score }} / {{ detailed_report.technical_skills.max_score }}</span>
                 </div>
@@ -114,7 +114,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-                        Soft Skills
+                        {% if resume.doc_type == 'portfolio' %}Communication{% else %}Soft Skills{% endif %}
                     </h5>
                     <span class="badge bg-{{ detailed_report.soft_skills.status }}">{{ detailed_report.soft_skills.score }}/{{ detailed_report.soft_skills.max_score }}</span>
                 </div>
@@ -131,7 +131,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                        Education
+                        {% if resume.doc_type == 'portfolio' %}Impact & Links{% else %}Education{% endif %}
                     </h5>
                     <span class="badge bg-{{ detailed_report.education.status }}">{{ detailed_report.education.score }}/{{ detailed_report.education.max_score }}</span>
                 </div>
@@ -148,7 +148,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold m-0 text-dark d-flex align-items-center">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" class="me-2 text-primary" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                        Objectives
+                        {% if resume.doc_type == 'portfolio' %}Presentation & UX{% else %}Objectives{% endif %}
                     </h5>
                     <span class="badge bg-{{ detailed_report.objectives.status }}">{{ detailed_report.objectives.score }}/{{ detailed_report.objectives.max_score }}</span>
                 </div>

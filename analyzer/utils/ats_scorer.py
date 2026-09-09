@@ -94,7 +94,7 @@ def _fallback_calculate_ats_score(text):
         "detailed_report": detailed_report
     }
 
-def calculate_ats_score(text):
+def calculate_ats_score(text, doc_type='resume'):
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("GEMINI_API_KEY not found in environment. Using fallback algorithm.")
@@ -104,9 +104,22 @@ def calculate_ats_score(text):
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('gemini-1.5-flash')
         
+        if doc_type == 'portfolio':
+            prompt_context = "PORTFOLIO text (projects, case studies, technical depth, live links)"
+            feedback_context = "portfolio's strengths and weaknesses"
+            schema_experience = "Detailed feedback on their projects, case studies, and impact."
+            schema_education = "Feedback on continuous learning, certifications, or depth of case studies."
+            schema_objectives = "Feedback on overall presentation, UI/UX, and clarity."
+        else:
+            prompt_context = "resume text"
+            feedback_context = "resume's strengths and weaknesses"
+            schema_experience = "Detailed feedback on their work experience."
+            schema_education = "Feedback on education."
+            schema_objectives = "Feedback on professional summary."
+
         prompt = f"""
 You are an expert ATS (Applicant Tracking System) algorithm and a Senior Technical Recruiter.
-Analyze the following resume text and provide a highly accurate, structured JSON evaluation.
+Analyze the following {prompt_context} and provide a highly accurate, structured JSON evaluation.
 Do NOT wrap the response in markdown blocks like ```json. Return ONLY valid, raw JSON.
 
 The JSON MUST exactly match this structure:
@@ -114,18 +127,18 @@ The JSON MUST exactly match this structure:
     "score": <int between 0 and 100 based on overall quality>,
     "matched_keywords": ["list", "of", "found", "industry", "skills"],
     "missing_keywords": ["list", "of", "important", "skills", "they", "lack"],
-    "feedback": "A short, actionable 2-sentence summary of the resume's strengths and weaknesses.",
+    "feedback": "A short, actionable 2-sentence summary of the {feedback_context}.",
     "detailed_report": {{
         "experience": {{
             "score": <int 0-20>,
             "max_score": 20,
-            "feedback": "Detailed feedback on their work experience.",
+            "feedback": "{schema_experience}",
             "status": "success" | "warning" | "danger"
         }},
         "education": {{
             "score": <int 0-10>,
             "max_score": 10,
-            "feedback": "Feedback on education.",
+            "feedback": "{schema_education}",
             "status": "success" | "warning" | "danger"
         }},
         "technical_skills": {{
@@ -137,19 +150,19 @@ The JSON MUST exactly match this structure:
         "soft_skills": {{
             "score": <int 0-10>,
             "max_score": 10,
-            "feedback": "Feedback on soft skills.",
+            "feedback": "Feedback on soft skills and communication.",
             "status": "success" | "warning" | "danger"
         }},
         "objectives": {{
             "score": <int 0-10>,
             "max_score": 10,
-            "feedback": "Feedback on professional summary.",
+            "feedback": "{schema_objectives}",
             "status": "success" | "warning" | "danger"
         }}
     }}
 }}
 
-Analyze this resume text and be brutally honest but constructive:
+Analyze this document text and be brutally honest but constructive:
 ---
 {text[:5000]}
 ---

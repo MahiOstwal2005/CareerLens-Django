@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container my-5">
   <h2 class="fw-bold mb-4">CareerLens Dashboard</h2>
-  <p class="text-muted mb-4">Manage your resumes, view ATS scores, and get actionable insights to boost your job search.</p>
+  <p class="text-muted mb-4">Manage your resumes and portfolios, view ATS scores, and get actionable insights to boost your job search.</p>
   <style>
     .image-3d-view {
       transition: all 0.5s ease;
@@ -20,19 +20,19 @@
     <div class="col-12 text-center">
       <img src="https://resumemetric.com/og-image.jpg" alt="AI ATS Resume Checker Dashboard" class="img-fluid rounded-4 image-3d-view mb-4 w-100">
       <div class="mt-4">
-        <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm" href="{% url 'upload_resume' %}">Upload New Resume</a>
+        <a class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm" href="{% url 'upload_resume' %}">Upload New Document</a>
       </div>
     </div>
   </div>
   <div class="bg-white p-5 rounded-4 shadow-sm mt-5 mb-5">
     <div class="text-center mb-5">
-      <h1 class="fw-bolder display-4 mb-3">Is your resume good enough?</h1>
-      <p class="lead text-muted max-w-3xl mx-auto">A free and fast AI resume checker doing 27 crucial checks to ensure your resume’s content, layout, and design is technically compatible with applicant tracking systems and gets you interview callbacks.</p>
+      <h1 class="fw-bolder display-4 mb-3">Is your resume or portfolio good enough?</h1>
+      <p class="lead text-muted max-w-3xl mx-auto">A free and fast AI document checker doing crucial checks to ensure your content, layout, and design is technically compatible with applicant tracking systems and gets you interview callbacks.</p>
     </div>
 
     <div class="row g-5 align-items-center mb-5">
       <div class="col-lg-6">
-        <h2 class="fw-bold mb-4">CareerLens's Resume Checker forms its ATS score with a two-tier system</h2>
+        <h2 class="fw-bold mb-4">CareerLens's Checker forms its ATS score with a two-tier system</h2>
         <p class="text-muted mb-3">When you’re applying for a job, there’s a high chance your resume will be screened through an applicant tracking system (ATS) before it finds its way to a recruiter’s screen.</p>
         <div class="d-flex mb-3">
           <div class="me-3">
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="col-lg-6 bg-light rounded-4 p-4">
-         <h4 class="fw-bold mb-4">The AI-powered Resume Checker goes beyond typos and punctuation</h4>
+         <h4 class="fw-bold mb-4">The AI-powered Checker goes beyond typos and punctuation</h4>
          <div class="row g-3">
            <div class="col-sm-6">
              <ul class="list-unstyled text-muted small">
@@ -113,9 +113,9 @@
     </div>
     
     <div class="text-center">
-      <h3 class="fw-bold mb-3">Put your resume score to work</h3>
-      <p class="text-muted mb-4">Turn feedback into a stronger resume. Checking is step one. CareerLens covers the rest of the application.</p>
-      <a href="{% url 'upload_resume' %}" class="btn btn-primary btn-lg rounded-pill px-5">Get your resume score now!</a>
+      <h3 class="fw-bold mb-3">Put your score to work</h3>
+      <p class="text-muted mb-4">Turn feedback into a stronger application. Checking is step one. CareerLens covers the rest.</p>
+      <a href="{% url 'upload_resume' %}" class="btn btn-primary btn-lg rounded-pill px-5">Get your score now!</a>
     </div>
 
   </div>

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container my-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">Your Resume History</h2>
+    <h2 class="fw-bold">Your Document History</h2>
     <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 fw-semibold">Upload New</a>
   </div>
   
@@ -16,6 +16,7 @@
             <h5 class="card-title text-truncate fw-bold mb-0" title="{{ resume.filename }}">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2 text-primary"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
               {{ resume.filename }}
+              <span class="badge bg-secondary ms-2 align-middle" style="font-size: 0.65em;">{{ resume.get_doc_type_display }}</span>
             </h5>
           </div>
           <p class="text-muted small mb-3">
@@ -49,9 +50,9 @@
     <div class="mb-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-muted opacity-50"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
     </div>
-    <h4 class="fw-bold">No Resumes Found</h4>
-    <p class="text-muted mb-4">You haven't uploaded any resumes yet. Get started by analyzing your first one!</p>
-    <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold">Upload Your First Resume</a>
+    <h4 class="fw-bold">No Documents Found</h4>
+    <p class="text-muted mb-4">You haven't uploaded any documents yet. Get started by analyzing your first one!</p>
+    <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold">Upload Your First Document</a>
   </div>
   {% endif %}
 </div>

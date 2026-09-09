@@ -99,7 +99,7 @@ def upload_resume(request):
             resume.save()
             
             # Calculate ATS Score
-            result_data = calculate_ats_score(extracted_text)
+            result_data = calculate_ats_score(extracted_text, doc_type=resume.doc_type)
             
             ATSResult.objects.create(
                 resume=resume,
@@ -114,6 +114,7 @@ def upload_resume(request):
                 mongo_db.resumes.insert_one({
                     'username': request.user.username,
                     'file_name': resume.file.name,
+                    'doc_type': resume.doc_type,
                     'uploaded_at': datetime.datetime.now(),
                     'extracted_text': extracted_text[:500] + '...', # Store a snippet
                     'score': result_data['score'],
