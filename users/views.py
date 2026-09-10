@@ -25,7 +25,12 @@ def register(request):
                     'django_id': user.id,
                     'username': username,
                     'email': email,
-                    'role': 'student/job-seeker'
+                    'role': 'student/job-seeker',
+                    'college': None,
+                    'program': None,
+                    'semester': None,
+                    'skills': None,
+                    'areas_of_interest': None
                 })
             except Exception as e:
                 print("Failed to save to MongoDB:", e)
