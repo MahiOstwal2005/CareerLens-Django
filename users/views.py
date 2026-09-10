@@ -35,3 +35,24 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
+
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile
+
+@login_required
+def profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    # Try to fetch some extra data from MongoDB if needed, or just rely on Django user
+    mongo_user = None
+    try:
+        mongo_user = mongo_db.users.find_one({'django_id': request.user.id})
+    except Exception as e:
+        print("Failed to fetch user from MongoDB:", e)
+        
+    context = {
+        'user': request.user,
+        'profile': profile,
+        'role': mongo_user.get('role', 'student/job-seeker') if mongo_user else 'student/job-seeker'
+    }
+    return render(request, 'users/profile.html', context)

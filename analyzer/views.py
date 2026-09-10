@@ -121,7 +121,7 @@ def upload_resume(request):
                     'matched_keywords': result_data['matched_keywords'],
                     'missing_keywords': result_data['missing_keywords'],
                     'feedback': result_data['feedback'],
-                    'detailed_report': result_data.get('detailed_report', {})
+                    'comprehensive_report': result_data.get('comprehensive_report', {})
                 })
             except Exception as e:
                 print("Failed to save to MongoDB:", e)
@@ -132,7 +132,6 @@ def upload_resume(request):
         
     return render(request, 'analyzer/upload.html', {'form': form})
 
-@login_required
 @login_required
 def history(request):
     resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
@@ -156,10 +155,108 @@ def result(request, pk):
     except Exception as e:
         print("Failed to fetch from MongoDB:", e)
         
-    detailed_report = mongo_report.get('detailed_report', {}) if mongo_report else {}
+    tier = request.user.profile.tier if hasattr(request.user, 'profile') else 'free'
+    if tier == 'free':
+        comprehensive_report = {}
+    else:
+        comprehensive_report = mongo_report.get('comprehensive_report', {}) if mongo_report else {}
     
     return render(request, 'analyzer/result.html', {
         'resume': resume,
         'ats_result': ats_result,
-        'detailed_report': detailed_report
+        'report': comprehensive_report,
+        'tier': tier
     })
+
+import stripe
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+@login_required
+def create_checkout_session(request, plan):
+    # Dummy implementation for testing if no stripe keys are provided
+    if not settings.STRIPE_SECRET_KEY or settings.STRIPE_SECRET_KEY == 'sk_test_dummy':
+        from users.models import UserProfile
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        profile.tier = 'pro'
+        profile.save()
+        from django.contrib import messages
+        messages.success(request, "Successfully upgraded to Pro (Dummy mode)!")
+        return redirect('dashboard')
+        
+    # Real Stripe implementation
+    domain_url = request.build_absolute_uri('/')[:-1]
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            client_reference_id=request.user.id if request.user.is_authenticated else None,
+            success_url=domain_url + '/analyzer/success?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=domain_url + '/analyzer/cancel/',
+            payment_method_types=['card'],
+            mode='subscription',
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Pro Plan',
+                        },
+                        'unit_amount': 999,
+                        'recurring': {
+                            'interval': 'month',
+                        },
+                    },
+                    'quantity': 1,
+                }
+            ]
+        )
+        return redirect(checkout_session.url, code=303)
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+
+@login_required
+def payment_success(request):
+    # Retrieve the session
+    session_id = request.GET.get('session_id')
+    if session_id and settings.STRIPE_SECRET_KEY and settings.STRIPE_SECRET_KEY != 'sk_test_dummy':
+        try:
+            session = stripe.checkout.Session.retrieve(session_id)
+            if session.payment_status == 'paid':
+                from users.models import UserProfile
+                profile, created = UserProfile.objects.get_or_create(user=request.user)
+                profile.tier = 'pro'
+                profile.stripe_customer_id = session.customer
+                profile.stripe_subscription_id = session.subscription
+                profile.save()
+                from django.contrib import messages
+                messages.success(request, "Successfully upgraded to Pro!")
+        except Exception as e:
+            print("Error retrieving session", e)
+    return redirect('dashboard')
+
+@login_required
+def payment_cancel(request):
+    from django.contrib import messages
+    messages.warning(request, "Payment was cancelled.")
+    return redirect('pricing')
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        return HttpResponse(status=400)
+
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        # Handled in success_url typically, but good to have here as well
+    return HttpResponse(status=200)

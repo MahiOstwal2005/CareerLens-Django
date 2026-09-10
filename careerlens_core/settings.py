@@ -64,6 +64,10 @@ DATABASES = {
 MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
 MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME', 'careerlens_db')
 
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},

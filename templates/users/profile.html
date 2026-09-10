@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 my-4 animate-fade-in" style="background: linear-gradient(120deg, #f0fdf4 0%, #ffffff 50%, #f5f3ff 100%); border-radius: 24px;">
+    <div class="row g-4">
+        <!-- LEFT COLUMN: Profile + Account Information -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <!-- Profile Content -->
+                <div class="card-body p-4 p-md-5">
+                    
+                    <!-- Top section with Avatar, Name, Email, Edit -->
+                    <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start mb-4">
+                        <!-- Avatar -->
+                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle me-sm-4 mb-3 mb-sm-0" style="width: 100px; height: 100px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                            </svg>
+                        </div>
+                        
+                        <div>
+                            <h3 class="fw-bold mb-1" style="color: #0b2046;">{{ user.get_full_name|default:user.username }}</h3>
+                            <p class="text-muted mb-3 d-flex align-items-center justify-content-center justify-content-sm-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-2" viewBox="0 0 16 16">
+                                  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+                                </svg>
+                                {{ user.email }}
+                            </p>
+                            <button class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-semibold d-inline-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-2" viewBox="0 0 16 16">
+                                  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                </svg>
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <hr class="text-muted opacity-10 my-4">
+                    
+                    <h6 class="fw-bold mb-4" style="color: #0b2046;">Account Information</h6>
+                    
+                    <div class="d-flex flex-column gap-4">
+                        <div class="row align-items-start">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-mortarboard me-3" viewBox="0 0 16 16">
+                                  <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
+                                  <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466zm-.068 1.873.22-.748 3.496 1.311a.5.5 0 0 0 .352 0l3.496-1.311.22.748L8 12.46z"/>
+                                </svg>
+                                <span class="small fw-medium">College</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                <span class="fw-semibold text-dark" style="font-size: 0.95rem;">{{ profile.college|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-journal-bookmark me-3" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M6 8V1h1v6.117L8.743 6.22 11 8V1h1v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8"/>
+                                  <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                                  <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                                </svg>
+                                <span class="small fw-medium">Program</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                <span class="fw-semibold text-dark" style="font-size: 0.95rem;">{{ profile.program|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-calendar3 me-3" viewBox="0 0 16 16">
+                                  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857z"/>
+                                  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2m3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                                </svg>
+                                <span class="small fw-medium">Semester</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                <span class="fw-semibold text-dark" style="font-size: 0.95rem;">{{ profile.semester|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-code-slash me-3" viewBox="0 0 16 16">
+                                  <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"/>
+                                </svg>
+                                <span class="small fw-medium">Skills</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                <span class="fw-semibold text-dark" style="font-size: 0.95rem; line-height: 1.6;">{{ profile.skills|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Your Plan + Account Settings -->
+        <div class="col-lg-7 d-flex flex-column gap-4">
+            
+            <!-- CURRENT PLAN SECTION -->
+            <div>
+                <h5 class="fw-bold mb-3" style="color: #0b2046;">Your Plan</h5>
+                
+                <div class="card border-0 shadow-sm rounded-4" style="background-color: #f6fbf8;">
+                    <div class="card-body p-4">
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h4 class="fw-bold mb-0 text-dark">
+                                {% if profile.tier == 'premium' %}Premium Plan{% elif profile.tier == 'pro' %}Pro Plan{% else %}Free Plan{% endif %}
+                            </h4>
+                            <span class="badge rounded-pill px-3 py-2 fw-semibold d-flex align-items-center" style="background-color: #20c997; color: white; font-size: 0.85rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-check-circle-fill me-1" viewBox="0 0 16 16">
+                                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                Current Plan
+                            </span>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <span class="fw-bold text-success" style="font-size: 2.2rem;">
+                                {% if profile.tier == 'premium' %}$29.99{% elif profile.tier == 'pro' %}$9.99{% else %}$0{% endif %}
+                            </span>
+                            <span class="text-muted fw-medium">/ month</span>
+                        </div>
+                        
+                        <p class="text-muted small mb-4">
+                            Renews automatically <span class="mx-1">•</span> <span class="text-success fw-semibold">Active</span>
+                        </p>
+                        
+                        <h6 class="fw-bold mb-3" style="color: #0b2046;">Plan Includes</h6>
+                        <ul class="list-unstyled text-start mb-4" style="font-size: 0.95rem;">
+                            <li class="mb-2 d-flex align-items-center text-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check me-2 text-success" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
+                                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                </svg>
+                                Basic resume analysis
+                            </li>
+                            <li class="mb-2 d-flex align-items-center text-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check me-2 text-success" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
+                                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                </svg>
+                                ATS analysis & feedback
+                            </li>
+                            {% if profile.tier == 'pro' or profile.tier == 'premium' %}
+                            <li class="mb-2 d-flex align-items-center text-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check me-2 text-success" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
+                                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                </svg>
+                                Detailed report
+                            </li>
+                            <li class="mb-2 d-flex align-items-center text-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check me-2 text-success" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
+                                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                </svg>
+                                Resume suggestions
+                            </li>
+                            {% endif %}
+                            {% if profile.tier == 'premium' %}
+                            <li class="mb-2 d-flex align-items-center text-dark">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check me-2 text-success" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
+                                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
+                                </svg>
+                                Advanced career assistance
+                            </li>
+                            {% endif %}
+                        </ul>
+                        
+                        <a href="{% url 'pricing' %}" class="btn w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center" style="background-color: #20c997; color: white;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right me-2" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0v-6z"/>
+                            </svg>
+                            {% if profile.tier == 'free' %}Upgrade Plan{% else %}Manage Plan{% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACCOUNT SETTINGS SECTION -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4" style="color: #0b2046;">Account Settings</h5>
+                    
+                    <div class="row g-4">
+                        <!-- Setting 1: Personal Information -->
+                        <div class="col-md-6">
+                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary me-3" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="fw-medium small">Personal Information</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        
+                        <!-- Setting 2: Password & Security -->
+                        <div class="col-md-6">
+                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success me-3" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-shield-check" viewBox="0 0 16 16">
+                                          <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+                                          <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="fw-medium small">Password & Security</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        
+                        <!-- Setting 3: Notifications -->
+                        <div class="col-md-6">
+                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle me-3" style="width: 40px; height: 40px; background-color: #f3e8ff; color: #8b5cf6;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                                          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                                        </svg>
+                                    </div>
+                                    <span class="fw-medium small">Notifications</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        
+                        <!-- Setting 4: Delete Account -->
+                        <div class="col-md-6">
+                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark" onclick="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger me-3" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="fw-medium small">Delete Account</span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}

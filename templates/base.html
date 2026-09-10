@@ -44,12 +44,15 @@
         <a class="btn btn-outline-primary fw-bold mx-2" href="{% url 'upload_resume' %}">Upload Resume</a>
     </li>
                 {% if user.is_authenticated %}
-    <li class="nav-item">
-        <form method="POST" action="{% url 'logout' %}" class="d-inline">
-            {% csrf_token %}
-            <button type="submit" class="btn nav-link text-danger fw-semibold border-0 bg-transparent px-3">Logout</button>
-        </form>
-    </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold px-3 text-dark" href="{% url 'profile' %}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn nav-link text-danger fw-semibold border-0 bg-transparent px-3">Logout</button>
+                    </form>
+                </li>
 {% else %}
     <li class="nav-item"><a class="nav-link fw-bold px-4" href="{% url 'login' %}">Sign In</a></li>
     <li class="nav-item"><a class="btn btn-primary fw-bold px-4 py-2 ms-2 rounded-pill shadow-sm" href="{% url 'register' %}">Get Started</a></li>
