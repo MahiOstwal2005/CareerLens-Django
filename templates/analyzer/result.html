@@ -7,11 +7,15 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 pb-3 border-bottom">
         <div>
             <h1 class="fw-bold mb-2" style="font-size: 2.2rem; letter-spacing: -0.5px;">CareerLens Analysis</h1>
-            <p class="text-muted fs-5 mb-0">For {{ resume.get_doc_type_display|lower }}: <strong>{{ resume.file.name|slice:"8:" }}</strong></p>
+            <p class="text-muted fs-5 mb-0">For {{ resume.get_doc_type_display|lower }}: <strong>{{ resume.filename }}</strong></p>
         </div>
         <div class="mt-4 mt-md-0">
             <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-4 me-2">Back to Dashboard</a>
-            <a href="{{ resume.file.url }}" target="_blank" class="btn btn-primary px-4">View Document</a>
+            {% if resume.file %}
+                <a href="{{ resume.file.url }}" target="_blank" class="btn btn-primary px-4">View Document</a>
+            {% elif resume.portfolio_url %}
+                <a href="{{ resume.portfolio_url }}" target="_blank" class="btn btn-primary px-4">View Portfolio</a>
+            {% endif %}
         </div>
     </div>
 

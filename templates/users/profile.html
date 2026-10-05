@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-5 my-4 animate-fade-in" style="background: linear-gradient(120deg, #f0fdf4 0%, #ffffff 50%, #f5f3ff 100%); border-radius: 24px;">
+<div class="container py-5 my-4 animate-fade-in profile-container-bg" style="border-radius: 24px;">
     <div class="row g-4">
         <!-- LEFT COLUMN: Profile + Account Information -->
         <div class="col-lg-5">
@@ -13,32 +13,36 @@
                     <!-- Top section with Avatar, Name, Email, Edit -->
                     <div class="d-flex flex-column flex-sm-row align-items-center align-items-sm-start text-center text-sm-start mb-4">
                         <!-- Avatar -->
-                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle me-sm-4 mb-3 mb-sm-0" style="width: 100px; height: 100px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                            </svg>
+                        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle me-sm-4 mb-3 mb-sm-0" style="width: 100px; height: 100px; overflow: hidden;">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                </svg>
+                            {% endif %}
                         </div>
                         
                         <div>
-                            <h3 class="fw-bold mb-1" style="color: #0b2046;">{{ user.get_full_name|default:user.username }}</h3>
+                            <h3 class="fw-bold mb-1 text-dark">{{ user.get_full_name|default:user.username }}</h3>
                             <p class="text-muted mb-3 d-flex align-items-center justify-content-center justify-content-sm-start">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope me-2" viewBox="0 0 16 16">
                                   <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
                                 </svg>
                                 {{ user.email }}
                             </p>
-                            <button class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-semibold d-inline-flex align-items-center">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-semibold d-inline-flex align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil me-2" viewBox="0 0 16 16">
                                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                                 </svg>
                                 Edit Profile
-                            </button>
+                            </a>
                         </div>
                     </div>
                     
                     <hr class="text-muted opacity-10 my-4">
                     
-                    <h6 class="fw-bold mb-4" style="color: #0b2046;">Account Information</h6>
+                    <h6 class="fw-bold mb-4 text-dark">Account Information</h6>
                     
                     <div class="d-flex flex-column gap-4">
                         <div class="row align-items-start">
@@ -81,7 +85,7 @@
                             </div>
                         </div>
 
-                        <div class="row align-items-start">
+                        <div class="row align-items-start mb-3">
                             <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-code-slash me-3" viewBox="0 0 16 16">
                                   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"/>
@@ -90,6 +94,52 @@
                             </div>
                             <div class="col-8 col-sm-7">
                                 <span class="fw-semibold text-dark" style="font-size: 0.95rem; line-height: 1.6;">{{ profile.skills|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start mb-3">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-star me-3" viewBox="0 0 16 16">
+                                  <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.344 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                                </svg>
+                                <span class="small fw-medium">Interests</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                <span class="fw-semibold text-dark" style="font-size: 0.95rem;">{{ profile.areas_of_interest|default:"Not specified" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start mb-3">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-link-45deg me-3" viewBox="0 0 16 16">
+                                  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                                  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+                                </svg>
+                                <span class="small fw-medium">Portfolio</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                {% if profile.portfolio_url %}
+                                <a href="{{ profile.portfolio_url }}" target="_blank" class="fw-semibold text-primary" style="font-size: 0.95rem;">View Portfolio</a>
+                                {% else %}
+                                <span class="fw-semibold text-muted" style="font-size: 0.95rem;">Not specified</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <div class="col-4 col-sm-5 d-flex align-items-center text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-file-earmark-person me-3" viewBox="0 0 16 16">
+                                  <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"/>
+                                </svg>
+                                <span class="small fw-medium">Resume</span>
+                            </div>
+                            <div class="col-8 col-sm-7">
+                                {% if profile.resume_link %}
+                                <a href="{{ profile.resume_link }}" target="_blank" class="fw-semibold text-primary" style="font-size: 0.95rem;">View Resume</a>
+                                {% else %}
+                                <span class="fw-semibold text-muted" style="font-size: 0.95rem;">Not specified</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -102,9 +152,9 @@
             
             <!-- CURRENT PLAN SECTION -->
             <div>
-                <h5 class="fw-bold mb-3" style="color: #0b2046;">Your Plan</h5>
+                <h5 class="fw-bold mb-3 text-dark">Your Plan</h5>
                 
-                <div class="card border-0 shadow-sm rounded-4" style="background-color: #f6fbf8;">
+                <div class="card border-0 shadow-sm rounded-4" class="plan-card-bg">
                     <div class="card-body p-4">
                         
                         <div class="d-flex justify-content-between align-items-center mb-1">
@@ -130,7 +180,7 @@
                             Renews automatically <span class="mx-1">•</span> <span class="text-success fw-semibold">Active</span>
                         </p>
                         
-                        <h6 class="fw-bold mb-3" style="color: #0b2046;">Plan Includes</h6>
+                        <h6 class="fw-bold mb-3 text-dark">Plan Includes</h6>
                         <ul class="list-unstyled text-start mb-4" style="font-size: 0.95rem;">
                             <li class="mb-2 d-flex align-items-center text-dark">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check me-2 text-success" viewBox="0 0 16 16" stroke="currentColor" stroke-width="1">
@@ -168,7 +218,7 @@
                             {% endif %}
                         </ul>
                         
-                        <a href="{% url 'pricing' %}" class="btn w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center" style="background-color: #20c997; color: white;">
+                        <a href="{% url 'manage_plan' %}" class="btn w-100 rounded-pill py-2 fw-bold d-flex align-items-center justify-content-center" style="background-color: #20c997; color: white;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right me-2" viewBox="0 0 16 16">
                               <path fill-rule="evenodd" d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0v-6z"/>
                             </svg>
@@ -181,29 +231,12 @@
             <!-- ACCOUNT SETTINGS SECTION -->
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4" style="color: #0b2046;">Account Settings</h5>
+                    <h5 class="fw-bold mb-4 text-dark">Account Settings</h5>
                     
                     <div class="row g-4">
-                        <!-- Setting 1: Personal Information -->
-                        <div class="col-md-6">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary me-3" style="width: 40px; height: 40px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664z"/>
-                                        </svg>
-                                    </div>
-                                    <span class="fw-medium small">Personal Information</span>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
-                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </a>
-                        </div>
-                        
-                        <!-- Setting 2: Password & Security -->
-                        <div class="col-md-6">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
+                        <!-- Setting 1: Password & Security -->
+                        <div class="col-md-12">
+                            <a href="{% url 'password_change' %}" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success me-3" style="width: 40px; height: 40px;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-shield-check" viewBox="0 0 16 16">
@@ -211,7 +244,7 @@
                                           <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
                                         </svg>
                                     </div>
-                                    <span class="fw-medium small">Password & Security</span>
+                                    <span class="fw-medium small">Change Password</span>
                                 </div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
                                   <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
@@ -219,39 +252,42 @@
                             </a>
                         </div>
                         
-                        <!-- Setting 3: Notifications -->
-                        <div class="col-md-6">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark">
+                        <!-- Setting 2: Theme Appearance -->
+                        <div class="col-md-12">
+                            <button type="button" onclick="toggleTheme()" class="btn w-100 p-0 text-start text-decoration-none d-flex align-items-center justify-content-between text-dark border-0 bg-transparent">
                                 <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle me-3" style="width: 40px; height: 40px; background-color: #f3e8ff; color: #8b5cf6;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                                          <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10 text-warning me-3" style="width: 40px; height: 40px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-moon-stars" viewBox="0 0 16 16">
+                                          <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z"/>
                                         </svg>
                                     </div>
-                                    <span class="fw-medium small">Notifications</span>
+                                    <span class="fw-medium small">Theme (Dark/Light)</span>
                                 </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
-                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </a>
+                                <div class="form-check form-switch m-0" style="pointer-events: none;">
+                                    <input class="form-check-input" type="checkbox" id="themeSwitchMock">
+                                </div>
+                            </button>
                         </div>
                         
-                        <!-- Setting 4: Delete Account -->
-                        <div class="col-md-6">
-                            <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between text-dark" onclick="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger me-3" style="width: 40px; height: 40px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                        </svg>
+                        <!-- Setting 3: Delete Account -->
+                        <div class="col-md-12">
+                            <form action="{% url 'delete_account' %}" method="POST" class="m-0" onsubmit="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn w-100 p-0 text-start text-decoration-none d-flex align-items-center justify-content-between text-dark border-0 bg-transparent">
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger me-3" style="width: 40px; height: 40px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                              <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                            </svg>
+                                        </div>
+                                        <span class="fw-medium small">Delete Account</span>
                                     </div>
-                                    <span class="fw-medium small">Delete Account</span>
-                                </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
-                                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>
-                            </a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right text-muted" viewBox="0 0 16 16">
+                                      <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -261,3 +297,17 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const switchMock = document.getElementById('themeSwitchMock');
+        if (switchMock) {
+            switchMock.checked = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            window.addEventListener('themeChanged', () => {
+                switchMock.checked = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+            });
+        }
+    });
+</script>
+{% endblock %}

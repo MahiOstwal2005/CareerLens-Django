@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - CareerLens</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f6f9fc;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #32325d;
+        }
+        .checkout-container {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+            overflow: hidden;
+        }
+        .left-panel {
+            background: #ffffff;
+            padding: 40px;
+            border-right: 1px solid #e6ebf1;
+        }
+        .right-panel {
+            background: #f8fafc;
+            padding: 40px;
+        }
+        .form-control {
+            border: 1px solid #e6ebf1;
+            border-radius: 5px;
+            padding: 12px;
+            box-shadow: 0 1px 3px 0 rgba(50,50,93,.15), 0 1px 1px 0 rgba(0,0,0,.02);
+            font-size: 16px;
+            transition: box-shadow 0.15s ease;
+        }
+        .form-control:focus {
+            box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+            border-color: #5469d4;
+            outline: none;
+        }
+        .pay-btn {
+            background-color: #5469d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+        }
+        .pay-btn:hover {
+            background-color: #32325d;
+            transform: translateY(-1px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
+        }
+        .price-badge {
+            background: #e0e6ed;
+            color: #32325d;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container checkout-container">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold" style="color: #32325d; letter-spacing: -1px;">
+            <span style="color: #20c997;">Career</span>Lens Checkout
+        </h2>
+    </div>
+
+    <div class="row g-0 panel">
+        
+        <!-- Left Panel: Payment Details -->
+        <div class="col-md-7 left-panel">
+            <h4 class="fw-bold mb-4">Payment details</h4>
+            
+            <form action="{% url 'payment_success' %}" method="GET" id="paymentForm">
+                <!-- We pass session_id and plan in the query string just like real Stripe -->
+                <input type="hidden" name="session_id" value="cs_test_mock_dummy_session_123">
+                <input type="hidden" name="plan" value="{{ plan_id }}">
+                
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold mb-1">Email address</label>
+                    <input type="email" class="form-control" value="{{ request.user.email }}" placeholder="you@example.com" required>
+                </div>
+                
+                <!-- Payment Method Tabs -->
+                <ul class="nav nav-pills mb-3 gap-2" id="paymentTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active rounded-pill fw-semibold border border-primary px-4" id="card-tab" data-bs-toggle="pill" data-bs-target="#card" type="button" role="tab" style="background-color: #5469d4; color: white;">Card</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill fw-semibold border border-secondary px-4 text-dark" id="upi-tab" data-bs-toggle="pill" data-bs-target="#upi" type="button" role="tab" style="background-color: transparent;">UPI / QR</button>
+                  </li>
+                </ul>
+
+                <div class="tab-content" id="paymentTabsContent">
+                  <!-- Card Payment -->
+                  <div class="tab-pane fade show active" id="card" role="tabpanel">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold mb-1">Card information</label>
+                        <input type="text" class="form-control mb-2" id="cardNum" placeholder="1234 5678 1234 5678" maxlength="19" required>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="text" class="form-control" id="cardExp" placeholder="MM / YY" maxlength="5" required>
+                            </div>
+                            <div class="col-6">
+                                <input type="text" class="form-control" id="cardCvc" placeholder="CVC" maxlength="4" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold mb-1">Name on card</label>
+                        <input type="text" class="form-control" id="cardName" placeholder="Full name" required>
+                    </div>
+                  </div>
+                  
+                  <!-- UPI Payment -->
+                  <div class="tab-pane fade" id="upi" role="tabpanel">
+                    <div class="text-center mb-4 p-4 border rounded-3 bg-white">
+                        <p class="text-muted small fw-bold mb-3">Scan QR Code with any UPI App</p>
+                        <!-- Fake QR Code -->
+                        <div class="bg-light d-inline-block p-2 rounded shadow-sm border mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" fill="currentColor" class="bi bi-qr-code text-dark" viewBox="0 0 16 16">
+                              <path d="M2 2h2v2H2z"/>
+                              <path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z"/>
+                              <path d="M6 10v6H0v-6zm-5 1v4h4v-4zm11-9h2v2h-2z"/>
+                              <path d="M10 0v6h6V0zm5 1v4h-4V1zM8 1V0h1v2H8v2H7V1zm0 5V4h1v2zM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8zm0 0v1H2V8H1v1H0V7h3v1zm10 1h-1V7h1zm-1 0h-1v2h2v-1h-1zm-4 0h2v1h-1v1h-1zm2 3v-1h-1v1h-1v1H9v1h3v-2zm0 0h3v1h-2v1h-1zm-4-1v1h1v-2H7v1z"/>
+                              <path d="M7 12h1v3h4v1H7zm9 2v2h-3v-1h2v-1z"/>
+                            </svg>
+                        </div>
+                        <p class="small text-muted mb-0">or enter UPI ID manually</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold mb-1">Enter UPI ID</label>
+                        <input type="text" class="form-control" id="upiId" placeholder="username@upi">
+                    </div>
+                  </div>
+                </div>
+                
+                <button type="submit" class="pay-btn" id="payButton">
+                    Pay ${{ plan_price }}
+                </button>
+                
+                <div class="text-center mt-3">
+                    <a href="{% url 'pricing' %}" class="text-muted small text-decoration-none">← Cancel and return to pricing</a>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Right Panel: Order Summary -->
+        <div class="col-md-5 right-panel">
+            <h5 class="fw-bold mb-4">Order summary</h5>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <div class="fw-bold">{{ plan_name }}</div>
+                    <small class="text-muted">Billed {{ cycle }}</small>
+                </div>
+                <div class="fw-bold">${{ plan_price }}</div>
+            </div>
+            
+            <hr style="border-color: #e6ebf1;">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="fw-bold fs-5">Total due today</div>
+                <div class="fw-bold fs-5">${{ plan_price }}</div>
+            </div>
+            
+            <div class="d-flex align-items-center text-muted small mt-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill me-2" viewBox="0 0 16 16">
+                  <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                </svg>
+                Payments are secure and encrypted.
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Just a little UI fake loading for the submit button
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        var btn = document.getElementById('payButton');
+        btn.innerText = 'Processing...';
+        btn.style.opacity = '0.8';
+    });
+    
+    // Make sure required fields are only required if tab is active
+    const cardTab = document.getElementById('card-tab');
+    const upiTab = document.getElementById('upi-tab');
+    const cardInputs = [document.getElementById('cardNum'), document.getElementById('cardExp'), document.getElementById('cardCvc'), document.getElementById('cardName')];
+    const upiInput = document.getElementById('upiId');
+    
+    cardTab.addEventListener('click', () => {
+        cardTab.style.backgroundColor = '#5469d4';
+        cardTab.style.color = 'white';
+        upiTab.style.backgroundColor = 'transparent';
+        upiTab.style.color = 'black';
+        cardInputs.forEach(i => i.required = true);
+        upiInput.required = false;
+    });
+    
+    upiTab.addEventListener('click', () => {
+        upiTab.style.backgroundColor = '#5469d4';
+        upiTab.style.color = 'white';
+        cardTab.style.backgroundColor = 'transparent';
+        cardTab.style.color = 'black';
+        cardInputs.forEach(i => i.required = false);
+        upiInput.required = true;
+    });
+</script>
+
+</body>
+</html>

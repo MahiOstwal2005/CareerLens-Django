@@ -4,6 +4,56 @@
   <div class="text-center mb-5">
     <h1 class="fw-bold display-5">Pricing Plans</h1>
     <p class="text-muted lead">Choose the perfect plan for your career advancement.</p>
+    
+    <!-- Professional Billing Toggle -->
+    <style>
+        .billing-toggle-container {
+            background-color: #f1f5f9;
+            padding: 6px;
+            border-radius: 50px;
+            display: inline-flex;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            margin-top: 1rem;
+        }
+        .billing-btn {
+            position: relative;
+            z-index: 2;
+            border: none;
+            background: transparent;
+            padding: 10px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #64748b;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .billing-btn.active {
+            color: #0b2046;
+        }
+        .billing-slider {
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            left: 6px;
+            /* Adjust width dynamically based on button sizes, or just use 50% if equal */
+            width: 140px; 
+            background-color: white;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 1;
+        }
+    </style>
+    
+    <div class="billing-toggle-container">
+        <div class="billing-slider" id="billingSlider"></div>
+        <button class="billing-btn active" id="btn-monthly">Monthly</button>
+        <button class="billing-btn" id="btn-annual">
+            Annually <span class="badge rounded-pill ms-2" style="background-color: #10b981; color: white; font-size: 0.75rem;">Save 17%</span>
+        </button>
+    </div>
   </div>
   
   <div class="row g-4 max-w-5xl mx-auto">
@@ -21,7 +71,11 @@
             <li class="mb-2 text-muted"><span class="me-2">✗</span> Detailed report</li>
             <li class="mb-2 text-muted"><span class="me-2">✗</span> Priority support</li>
           </ul>
-          <a href="#" class="btn btn-outline-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Current Plan</a>
+          {% if tier == 'free' %}
+          <button class="btn btn-secondary mt-4 w-100 rounded-pill py-2 fw-semibold" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'downgrade_to_free' %}" class="btn btn-outline-danger mt-4 w-100 rounded-pill py-2 fw-semibold" onclick="return confirm('Downgrade to Free? You will lose Pro/Premium features.');">Downgrade to Free</a>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -33,14 +87,26 @@
         <div class="card-body d-flex flex-column">
           <h3 class="card-title fw-bold">Pro</h3>
           <p class="card-text text-muted mb-4">For serious job seekers</p>
-          <h2 class="display-4 fw-bold text-primary mb-4">$9.99<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          
+          <div id="price-pro-monthly">
+              <h2 class="display-4 fw-bold text-primary mb-4">$9.99<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          </div>
+          <div id="price-pro-annual" style="display: none;">
+              <h2 class="display-4 fw-bold text-primary mb-1">$99<span class="fs-6 text-muted fw-normal">/yr</span></h2>
+              <p class="text-success small mb-3 fw-bold">You save $20 a year!</p>
+          </div>
+          
           <ul class="list-unstyled text-start mb-auto">
             <li class="mb-2"><span class="text-success me-2">✓</span> ATS Score</li>
             <li class="mb-2"><span class="text-success me-2">✓</span> Detailed report</li>
             <li class="mb-2"><span class="text-success me-2">✓</span> Resume suggestions</li>
             <li class="mb-2 text-muted"><span class="me-2">✗</span> Personal coaching</li>
           </ul>
-          <a href="{% url 'create_checkout_session' 'pro' %}" class="btn btn-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Upgrade to Pro</a>
+          {% if tier == 'pro' %}
+          <button class="btn btn-secondary mt-4 w-100 rounded-pill py-2 fw-semibold" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'create_checkout_session' 'pro' %}?cycle=monthly" id="btn-pro" class="btn btn-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Upgrade to Pro</a>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -51,17 +117,87 @@
         <div class="card-body d-flex flex-column">
           <h3 class="card-title fw-bold">Premium</h3>
           <p class="card-text text-muted mb-4">All-in-one career suite</p>
-          <h2 class="display-4 fw-bold text-primary mb-4">$29.99<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          
+          <div id="price-premium-monthly">
+              <h2 class="display-4 fw-bold text-primary mb-4">$29.99<span class="fs-6 text-muted fw-normal">/mo</span></h2>
+          </div>
+          <div id="price-premium-annual" style="display: none;">
+              <h2 class="display-4 fw-bold text-primary mb-1">$299<span class="fs-6 text-muted fw-normal">/yr</span></h2>
+              <p class="text-success small mb-3 fw-bold">You save $60 a year!</p>
+          </div>
+
           <ul class="list-unstyled text-start mb-auto">
             <li class="mb-2"><span class="text-success me-2">✓</span> Everything in Pro</li>
             <li class="mb-2"><span class="text-success me-2">✓</span> Personal coaching</li>
             <li class="mb-2"><span class="text-success me-2">✓</span> Cover-letter generator</li>
             <li class="mb-2"><span class="text-success me-2">✓</span> Priority support</li>
           </ul>
-          <a href="#" class="btn btn-outline-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Get Premium</a>
+          {% if tier == 'premium' %}
+          <button class="btn btn-secondary mt-4 w-100 rounded-pill py-2 fw-semibold" disabled>Current Plan</button>
+          {% else %}
+          <a href="{% url 'create_checkout_session' 'premium' %}?cycle=monthly" id="btn-premium" class="btn btn-outline-primary mt-4 w-100 rounded-pill py-2 fw-semibold">Upgrade to Premium</a>
+          {% endif %}
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // New Pill Toggle elements
+    const btnMonthly = document.getElementById('btn-monthly');
+    const btnAnnual = document.getElementById('btn-annual');
+    const slider = document.getElementById('billingSlider');
+    
+    const proMonthly = document.getElementById('price-pro-monthly');
+    const proAnnual = document.getElementById('price-pro-annual');
+    const premiumMonthly = document.getElementById('price-premium-monthly');
+    const premiumAnnual = document.getElementById('price-premium-annual');
+    const checkoutPro = document.getElementById('btn-pro');
+    const checkoutPremium = document.getElementById('btn-premium');
+    
+    // Initialize slider width
+    slider.style.width = btnMonthly.offsetWidth + 'px';
+
+    function setBilling(cycle) {
+        if (cycle === 'annual') {
+            // Slide to annual
+            slider.style.width = btnAnnual.offsetWidth + 'px';
+            slider.style.transform = `translateX(${btnMonthly.offsetWidth}px)`;
+            
+            btnMonthly.classList.remove('active');
+            btnAnnual.classList.add('active');
+            
+            // Show Annual Prices
+            proMonthly.style.display = 'none';
+            premiumMonthly.style.display = 'none';
+            proAnnual.style.display = 'block';
+            premiumAnnual.style.display = 'block';
+            
+            if(checkoutPro) checkoutPro.href = "{% url 'create_checkout_session' 'pro' %}?cycle=annual";
+            if(checkoutPremium) checkoutPremium.href = "{% url 'create_checkout_session' 'premium' %}?cycle=annual";
+        } else {
+            // Slide to monthly
+            slider.style.width = btnMonthly.offsetWidth + 'px';
+            slider.style.transform = `translateX(0px)`;
+            
+            btnAnnual.classList.remove('active');
+            btnMonthly.classList.add('active');
+            
+            // Show Monthly Prices
+            proMonthly.style.display = 'block';
+            premiumMonthly.style.display = 'block';
+            proAnnual.style.display = 'none';
+            premiumAnnual.style.display = 'none';
+            
+            if(checkoutPro) checkoutPro.href = "{% url 'create_checkout_session' 'pro' %}?cycle=monthly";
+            if(checkoutPremium) checkoutPremium.href = "{% url 'create_checkout_session' 'premium' %}?cycle=monthly";
+        }
+    }
+
+    btnMonthly.addEventListener('click', () => setBilling('monthly'));
+    btnAnnual.addEventListener('click', () => setBilling('annual'));
+});
+</script>
 {% endblock %}

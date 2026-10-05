@@ -1,44 +1,127 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container my-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">Your Document History</h2>
-    <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 fw-semibold">Upload New</a>
+<div class="container my-5 animate-fade-in">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+    <h2 class="fw-bold mb-3 mb-md-0 text-dark">Your Document History</h2>
+    <a href="{% url 'upload_resume' %}" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up-fill me-2" viewBox="0 0 16 16">
+          <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 5.146a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2z"/>
+        </svg>
+        Upload New
+    </a>
+  </div>
+  
+  <!-- Statistics Overview -->
+  <div class="row g-4 mb-5">
+      <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100" class="stat-card-1">
+              <div class="card-body p-4 d-flex align-items-center">
+                  <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success me-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-file-earmark-check" viewBox="0 0 16 16">
+                        <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                      </svg>
+                  </div>
+                  <div>
+                      <h6 class="text-muted fw-bold mb-1">Total Scans</h6>
+                      <h2 class="fw-bold mb-0 text-dark">{{ total_uploaded }}</h2>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100" class="stat-card-2">
+              <div class="card-body p-4 d-flex align-items-center">
+                  <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary me-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-file-earmark-person" viewBox="0 0 16 16">
+                        <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"/>
+                      </svg>
+                  </div>
+                  <div>
+                      <h6 class="text-muted fw-bold mb-1">Resumes</h6>
+                      <h2 class="fw-bold mb-0 text-dark">{{ total_resumes }}</h2>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-4">
+          <div class="card border-0 shadow-sm rounded-4 h-100" class="stat-card-3">
+              <div class="card-body p-4 d-flex align-items-center">
+                  <div class="bg-danger bg-opacity-10 p-3 rounded-circle text-danger me-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+                        <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                        <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+                      </svg>
+                  </div>
+                  <div>
+                      <h6 class="text-muted fw-bold mb-1">Portfolios</h6>
+                      <h2 class="fw-bold mb-0 text-dark">{{ total_portfolios }}</h2>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
   
   {% if resumes %}
-  <div class="row g-4">
+  <!-- Filter Tabs -->
+  <ul class="nav nav-pills mb-4 gap-2" id="docFilterTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active rounded-pill fw-semibold px-4" id="tab-all" data-filter="all" type="button">All Documents</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rounded-pill fw-semibold px-4 text-dark bg-light border" id="tab-resume" data-filter="resume" type="button">Resumes Only</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rounded-pill fw-semibold px-4 text-dark bg-light border" id="tab-portfolio" data-filter="portfolio" type="button">Portfolios Only</button>
+    </li>
+  </ul>
+
+  <div class="row g-4" id="documentGrid">
     {% for resume in resumes %}
-    <div class="col-md-6 col-lg-4">
-      <div class="card h-100 border-0 shadow-sm hover-shadow transition-all" style="border-radius: 12px;">
-        <div class="card-body">
+    <div class="col-md-6 col-lg-4 doc-card" data-doctype="{{ resume.doc_type }}">
+      <div class="card h-100 border-0 shadow-sm hover-shadow transition-all" style="border-radius: 16px; overflow: hidden;">
+        
+        <!-- Color Header based on type -->
+        <div style="height: 6px; width: 100%; background-color: {% if resume.doc_type == 'resume' %}#0d6efd{% else %}#dc3545{% endif %};"></div>
+        
+        <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <h5 class="card-title text-truncate fw-bold mb-0" title="{{ resume.filename }}">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2 text-primary"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              {% if resume.doc_type == 'resume' %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-person me-2 text-primary" viewBox="0 0 16 16"><path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2v9.255S12 12 8 12s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h5.5v2z"/></svg>
+              {% else %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-link-45deg me-2 text-danger" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+              {% endif %}
+              
               {{ resume.filename }}
-              <span class="badge bg-secondary ms-2 align-middle" style="font-size: 0.65em;">{{ resume.get_doc_type_display }}</span>
             </h5>
           </div>
-          <p class="text-muted small mb-3">
-            Uploaded on {{ resume.uploaded_at|date:"M d, Y" }}
-          </p>
+          
+          <div class="d-flex align-items-center mb-3">
+              <span class="badge rounded-pill fw-medium {% if resume.doc_type == 'resume' %}bg-primary{% else %}bg-danger{% endif %} bg-opacity-10 {% if resume.doc_type == 'resume' %}text-primary{% else %}text-danger{% endif %} me-2">{{ resume.get_doc_type_display }}</span>
+              <p class="text-muted small mb-0 fw-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-clock me-1 mb-1" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/></svg>
+                {{ resume.uploaded_at|date:"M d, Y" }}
+              </p>
+          </div>
           
           {% if resume.atsresult_set.first %}
-          <div class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <span class="small fw-semibold text-secondary">ATS Score</span>
-              <span class="fw-bold {% if resume.atsresult_set.first.score >= 80 %}text-success{% elif resume.atsresult_set.first.score >= 50 %}text-warning{% else %}text-danger{% endif %}">
-                {{ resume.atsresult_set.first.score }}/100
+          <div class="mb-4 bg-light p-3 rounded-3 border">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="small fw-bold text-secondary">ATS Compatibility</span>
+              <span class="fw-bold fs-5 {% if resume.atsresult_set.first.score >= 80 %}text-success{% elif resume.atsresult_set.first.score >= 50 %}text-warning{% else %}text-danger{% endif %}">
+                {{ resume.atsresult_set.first.score }}<span class="fs-6 text-muted fw-medium">/100</span>
               </span>
             </div>
-            <div class="progress" style="height: 8px; border-radius: 4px;">
+            <div class="progress" style="height: 6px; border-radius: 4px;">
               <div class="progress-bar {% if resume.atsresult_set.first.score >= 80 %}bg-success{% elif resume.atsresult_set.first.score >= 50 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ resume.atsresult_set.first.score }}%;" aria-valuenow="{{ resume.atsresult_set.first.score }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
           {% endif %}
           
           <div class="d-grid mt-auto">
-            <a href="{% url 'result' resume.pk %}" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold">View Full Report</a>
+            <a href="{% url 'result' resume.pk %}" class="btn {% if resume.doc_type == 'resume' %}btn-outline-primary{% else %}btn-outline-danger{% endif %} rounded-pill fw-semibold">View Full Report</a>
           </div>
         </div>
       </div>
@@ -46,7 +129,7 @@
     {% endfor %}
   </div>
   {% else %}
-  <div class="text-center py-5 bg-white shadow-sm rounded-4 border-0">
+  <div class="text-center py-5 bg-white shadow-sm rounded-4 border-0 mt-4">
     <div class="mb-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-muted opacity-50"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
     </div>
@@ -56,4 +139,34 @@
   </div>
   {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('#docFilterTabs button');
+    const cards = document.querySelectorAll('.doc-card');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Update active state
+            tabs.forEach(t => {
+                t.classList.remove('active', 'bg-primary', 'text-white');
+                t.classList.add('bg-light', 'text-dark', 'border');
+            });
+            this.classList.remove('bg-light', 'text-dark', 'border');
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (filter === 'all' || card.getAttribute('data-doctype') === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -89,12 +89,56 @@ def upload_resume(request):
         form = ResumeUploadForm(request.POST, request.FILES)
         if form.is_valid():
             resume = form.save(commit=False)
+            
+            # Get user profile and tier
+            from users.models import UserProfile
+            from django.utils import timezone
+            profile, _ = UserProfile.objects.get_or_create(user=request.user)
+            tier = profile.tier
+            
+            # Reset monthly resume limit if it's a new month
+            now = timezone.now().date()
+            if profile.last_scan_reset_date.month != now.month or profile.last_scan_reset_date.year != now.year:
+                profile.resumes_scanned_this_month = 0
+                profile.last_scan_reset_date = now
+                profile.save()
+
+            if tier == 'free':
+                from django.contrib import messages
+                
+                if resume.doc_type == 'portfolio':
+                    if profile.portfolios_scanned_total >= 1:
+                        messages.error(request, 'You have used your 1 free Portfolio scan! Upgrade to Pro for unlimited scans.')
+                        return redirect('pricing')
+                    else:
+                        profile.portfolios_scanned_total += 1
+                        profile.save()
+                        
+                elif resume.doc_type == 'resume':
+                    if profile.resumes_scanned_this_month >= 5:
+                        messages.error(request, 'You have reached your limit of 5 free resume scans this month. Upgrade to Pro for unlimited scans!')
+                        return redirect('pricing')
+                    else:
+                        profile.resumes_scanned_this_month += 1
+                        profile.save()
+                
             resume.user = request.user
             resume.save()
             
             # Extract text
-            file_path = resume.file.path
-            extracted_text = extract_text_from_file(file_path)
+            from .utils.extractor import extract_text_from_file, extract_text_from_url
+            extracted_text = ""
+            if resume.file:
+                file_path = resume.file.path
+                extracted_text = extract_text_from_file(file_path)
+            elif resume.portfolio_url:
+                extracted_text = extract_text_from_url(resume.portfolio_url)
+                
+            if not extracted_text:
+                from django.contrib import messages
+                messages.error(request, "We couldn't extract any text from the provided file or URL.")
+                return redirect('dashboard')
+                
             resume.extracted_text = extracted_text
             resume.save()
             
@@ -109,20 +153,28 @@ def upload_resume(request):
                 feedback=result_data['feedback']
             )
             
-            # Save Resume and ATS Result to MongoDB
+                        # Save Resume and ATS Result to MongoDB clean without nulls
+            doc_data = {
+                'username': request.user.username,
+                'doc_type': resume.doc_type,
+                'uploaded_at': datetime.datetime.now(),
+                'extracted_text': extracted_text[:500] + '...',
+                'score': result_data['score'],
+                'matched_keywords': result_data['matched_keywords'],
+                'missing_keywords': result_data['missing_keywords'],
+                'feedback': result_data['feedback'],
+                'comprehensive_report': result_data.get('comprehensive_report', {})
+            }
+            if resume.file:
+                doc_data['file_name'] = resume.file.name
+            if resume.portfolio_url:
+                doc_data['portfolio_url'] = resume.portfolio_url
+                
             try:
-                mongo_db.resumes.insert_one({
-                    'username': request.user.username,
-                    'file_name': resume.file.name,
-                    'doc_type': resume.doc_type,
-                    'uploaded_at': datetime.datetime.now(),
-                    'extracted_text': extracted_text[:500] + '...', # Store a snippet
-                    'score': result_data['score'],
-                    'matched_keywords': result_data['matched_keywords'],
-                    'missing_keywords': result_data['missing_keywords'],
-                    'feedback': result_data['feedback'],
-                    'comprehensive_report': result_data.get('comprehensive_report', {})
-                })
+                if resume.doc_type == 'portfolio':
+                    mongo_db.portfolios.insert_one(doc_data)
+                else:
+                    mongo_db.resumes.insert_one(doc_data)
             except Exception as e:
                 print("Failed to save to MongoDB:", e)
             
@@ -130,16 +182,39 @@ def upload_resume(request):
     else:
         form = ResumeUploadForm()
         
-    return render(request, 'analyzer/upload.html', {'form': form})
+    from users.models import UserProfile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    resumes_remaining = max(0, 5 - profile.resumes_scanned_this_month)
+    portfolios_remaining = max(0, 1 - profile.portfolios_scanned_total)
+        
+    return render(request, 'analyzer/upload.html', {
+        'form': form,
+        'tier': profile.tier,
+        'resumes_remaining': resumes_remaining,
+        'portfolios_remaining': portfolios_remaining
+    })
 
 @login_required
 def history(request):
-    resumes = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
-    return render(request, 'analyzer/history.html', {'resumes': resumes})
+    documents = Resume.objects.filter(user=request.user).order_by('-uploaded_at')
+    
+    total_uploaded = documents.count()
+    total_resumes = documents.filter(doc_type='resume').count()
+    total_portfolios = documents.filter(doc_type='portfolio').count()
+    
+    context = {
+        'resumes': documents,
+        'total_uploaded': total_uploaded,
+        'total_resumes': total_resumes,
+        'total_portfolios': total_portfolios
+    }
+    return render(request, 'analyzer/history.html', context)
 
 @login_required
 def pricing(request):
-    return render(request, 'analyzer/pricing.html')
+    from users.models import UserProfile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    return render(request, 'analyzer/pricing.html', {'tier': profile.tier})
 
 @login_required
 def result(request, pk):
@@ -148,10 +223,19 @@ def result(request, pk):
     
     mongo_report = None
     try:
-        mongo_report = mongo_db.resumes.find_one({
-            'username': request.user.username,
-            'file_name': resume.file.name
-        }, sort=[('uploaded_at', -1)])
+        if resume.doc_type == 'portfolio':
+            # Match by file_name if uploaded, else by portfolio_url
+            query = {'username': request.user.username}
+            if resume.file:
+                query['file_name'] = resume.file.name
+            else:
+                query['portfolio_url'] = resume.portfolio_url
+            mongo_report = mongo_db.portfolios.find_one(query, sort=[('uploaded_at', -1)])
+        else:
+            mongo_report = mongo_db.resumes.find_one({
+                'username': request.user.username,
+                'file_name': resume.file.name
+            }, sort=[('uploaded_at', -1)])
     except Exception as e:
         print("Failed to fetch from MongoDB:", e)
         
@@ -176,22 +260,35 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @login_required
 def create_checkout_session(request, plan):
-    # Dummy implementation for testing if no stripe keys are provided
-    if not settings.STRIPE_SECRET_KEY or settings.STRIPE_SECRET_KEY == 'sk_test_dummy':
-        from users.models import UserProfile
-        profile, created = UserProfile.objects.get_or_create(user=request.user)
-        profile.tier = 'pro'
-        profile.save()
-        from django.contrib import messages
-        messages.success(request, "Successfully upgraded to Pro (Dummy mode)!")
-        return redirect('dashboard')
+    cycle = request.GET.get('cycle', 'monthly')
+    
+    # Map plans to prices and names
+    plan_details = {
+        'pro': {'name': 'Pro Plan', 'price': 999, 'annual_price': 9900},
+        'premium': {'name': 'Premium Plan', 'price': 2999, 'annual_price': 29900}
+    }
+    
+    if plan not in plan_details:
+        plan = 'pro'
+        
+    details = plan_details[plan]
+    current_price = details['annual_price'] if cycle == 'annual' else details['price']
+
+    # Dummy implementation for testing if no stripe keys are provided or they are masked
+    if not settings.STRIPE_SECRET_KEY or settings.STRIPE_SECRET_KEY == 'sk_test_dummy' or settings.STRIPE_SECRET_KEY == '********************':
+        return render(request, 'analyzer/mock_checkout.html', {
+            'plan_name': details['name'],
+            'plan_price': current_price / 100,
+            'plan_id': plan,
+            'cycle': cycle
+        })
         
     # Real Stripe implementation
     domain_url = request.build_absolute_uri('/')[:-1]
     try:
         checkout_session = stripe.checkout.Session.create(
             client_reference_id=request.user.id if request.user.is_authenticated else None,
-            success_url=domain_url + '/analyzer/success?session_id={CHECKOUT_SESSION_ID}',
+            success_url=domain_url + f'/analyzer/success?session_id={{CHECKOUT_SESSION_ID}}&plan={plan}',
             cancel_url=domain_url + '/analyzer/cancel/',
             payment_method_types=['card'],
             mode='subscription',
@@ -200,11 +297,11 @@ def create_checkout_session(request, plan):
                     'price_data': {
                         'currency': 'usd',
                         'product_data': {
-                            'name': 'Pro Plan',
+                            'name': details['name'] + f" ({cycle.capitalize()})",
                         },
-                        'unit_amount': 999,
+                        'unit_amount': current_price,
                         'recurring': {
-                            'interval': 'month',
+                            'interval': 'month' if cycle == 'monthly' else 'year',
                         },
                     },
                     'quantity': 1,
@@ -216,24 +313,65 @@ def create_checkout_session(request, plan):
         return JsonResponse({'error': str(e)})
 
 @login_required
+def downgrade_to_free(request):
+    from users.models import UserProfile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    profile.tier = 'free'
+    profile.save()
+    from django.contrib import messages
+    messages.success(request, "Successfully downgraded to Free Plan.")
+    return redirect('manage_plan')
+
+@login_required
+def manage_plan(request):
+    from users.models import UserProfile
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    
+    resumes_used = profile.resumes_scanned_this_month
+    portfolios_used = profile.portfolios_scanned_total
+    total_scans = Resume.objects.filter(user=request.user).count()
+    
+    return render(request, 'analyzer/manage_plan.html', {
+        'profile': profile,
+        'resumes_used': resumes_used,
+        'portfolios_used': portfolios_used,
+        'total_scans': total_scans
+    })
+
+@login_required
 def payment_success(request):
     # Retrieve the session
     session_id = request.GET.get('session_id')
-    if session_id and settings.STRIPE_SECRET_KEY and settings.STRIPE_SECRET_KEY != 'sk_test_dummy':
+    plan = request.GET.get('plan', 'pro')
+    
+    from users.models import UserProfile
+    from django.contrib import messages
+    
+    # Handle Mock Checkout Success
+    if session_id == 'cs_test_mock_dummy_session_123':
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        profile.tier = plan
+        profile.stripe_customer_id = 'mock_customer_id'
+        profile.stripe_subscription_id = 'mock_sub_id'
+        profile.save()
+        messages.success(request, f"Successfully upgraded to {plan.capitalize()}!")
+        return redirect('manage_plan')
+
+    # Handle Real Stripe Checkout Success
+    if session_id and settings.STRIPE_SECRET_KEY and settings.STRIPE_SECRET_KEY != 'sk_test_dummy' and settings.STRIPE_SECRET_KEY != '********************':
         try:
             session = stripe.checkout.Session.retrieve(session_id)
             if session.payment_status == 'paid':
-                from users.models import UserProfile
                 profile, created = UserProfile.objects.get_or_create(user=request.user)
-                profile.tier = 'pro'
+                profile.tier = plan
                 profile.stripe_customer_id = session.customer
                 profile.stripe_subscription_id = session.subscription
                 profile.save()
-                from django.contrib import messages
-                messages.success(request, "Successfully upgraded to Pro!")
+                messages.success(request, f"Successfully upgraded to {plan.capitalize()}!")
         except Exception as e:
             print("Error retrieving session", e)
-    return redirect('dashboard')
+            
+    return redirect('manage_plan')
 
 @login_required
 def payment_cancel(request):
@@ -260,3 +398,4 @@ def stripe_webhook(request):
         session = event['data']['object']
         # Handled in success_url typically, but good to have here as well
     return HttpResponse(status=200)
+

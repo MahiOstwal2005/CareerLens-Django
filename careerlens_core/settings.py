@@ -4,7 +4,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 from dotenv import load_dotenv
 load_dotenv(os.path.join(BASE_DIR, '.env'))
-SECRET_KEY = 'django-insecure-mvp-secret-key-careerlens'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-mvp-secret-key-careerlens')
 DEBUG = True
 ALLOWED_HOSTS = []
 

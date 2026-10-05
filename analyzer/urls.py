@@ -11,4 +11,6 @@ urlpatterns = [
     path('success/', views.payment_success, name='payment_success'),
     path('cancel/', views.payment_cancel, name='payment_cancel'),
     path('webhook/', views.stripe_webhook, name='stripe_webhook'),
+    path('manage-plan/', views.manage_plan, name='manage_plan'),
+    path('downgrade/', views.downgrade_to_free, name='downgrade_to_free'),
 ]

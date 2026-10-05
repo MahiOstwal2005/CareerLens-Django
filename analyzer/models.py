@@ -9,13 +9,18 @@ class Resume(models.Model):
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     doc_type = models.CharField(max_length=10, choices=DOC_TYPE_CHOICES, default='resume')
-    file = models.FileField(upload_to='resumes/')
+    file = models.FileField(upload_to='resumes/', blank=True, null=True)
+    portfolio_url = models.URLField(max_length=1000, blank=True, null=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     extracted_text = models.TextField(blank=True, null=True)
     
     @property
     def filename(self):
-        return os.path.basename(self.file.name)
+        if self.file:
+            return os.path.basename(self.file.name)
+        elif self.portfolio_url:
+            return self.portfolio_url
+        return "Unknown File"
     
     def __str__(self):
         return f"{self.user.username}'s {self.get_doc_type_display()} - {self.uploaded_at.date()}"

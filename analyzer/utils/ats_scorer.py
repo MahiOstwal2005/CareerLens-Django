@@ -1,7 +1,7 @@
 import re
 import os
 import json
-import google.generativeai as genai
+from google import genai
 
 # A basic list of common software engineering / general tech keywords
 CORE_KEYWORDS = [
@@ -27,21 +27,21 @@ def _fallback_calculate_ats_score(text):
     tech_score = len([kw for kw in matched if kw not in ['leadership', 'teamwork', 'problem solving', 'communication', 'project management']])
     
     # Experience Checks
-    experience_keywords = ['experience', 'years', 'led', 'managed', 'developed', 'created', 'achieved']
+    experience_keywords = ['experience', 'years', 'led', 'managed', 'developed', 'created', 'achieved', 'architected', 'scaled']
     exp_matched = [kw for kw in experience_keywords if kw in text_lower]
     has_experience = len(exp_matched) >= 2
     
     # Education Checks
-    edu_keywords = ['bachelor', 'master', 'phd', 'degree', 'university', 'college']
+    edu_keywords = ['bachelor', 'master', 'phd', 'degree', 'university', 'college', 'certification']
     edu_matched = [kw for kw in edu_keywords if kw in text_lower]
     has_education = len(edu_matched) >= 1
     
     # Soft Skills
-    soft_keywords = ['leadership', 'teamwork', 'communication', 'problem solving', 'agile', 'scrum']
+    soft_keywords = ['leadership', 'teamwork', 'communication', 'problem solving', 'agile', 'scrum', 'collaboration']
     soft_matched = [kw for kw in soft_keywords if kw in text_lower]
     
     # Objectives
-    obj_keywords = ['objective', 'summary', 'seeking', 'professional', 'profile']
+    obj_keywords = ['objective', 'summary', 'seeking', 'professional', 'profile', 'vision']
     has_objective = any(kw in text_lower for kw in obj_keywords)
     
     # Score calculation
@@ -53,75 +53,42 @@ def _fallback_calculate_ats_score(text):
     
     final_score = min(keyword_score + exp_score + edu_score + soft_score + obj_score, 100)
     
-    detailed_report = {
-        'experience': {
-            'score': exp_score,
-            'max_score': 20,
-            'feedback': "Great use of action verbs and quantifiable experience." if has_experience else "Lack of experience highlighted. Try adding quantifiable achievements.",
-            'status': 'success' if has_experience else 'danger'
-        },
-        'education': {
-            'score': edu_score,
-            'max_score': 10,
-            'feedback': "Education/Knowledge section detected." if has_education else "Missing clear education indicators.",
-            'status': 'success' if has_education else 'warning'
-        },
-        'technical_skills': {
-            'score': keyword_score,
-            'max_score': 50,
-            'feedback': f"Found {tech_score} technical keywords.",
-            'status': 'success' if keyword_score > 30 else 'warning'
-        },
-        'soft_skills': {
-            'score': soft_score,
-            'max_score': 10,
-            'feedback': f"Found {len(soft_matched)} soft skills." if len(soft_matched) > 2 else "Lacking soft skills.",
-            'status': 'success' if len(soft_matched) > 2 else 'danger'
-        },
-        'objectives': {
-            'score': obj_score,
-            'max_score': 10,
-            'feedback': "Professional summary/objective found." if has_objective else "Missing a professional summary.",
-            'status': 'success' if has_objective else 'danger'
-        }
-    }
-    
-    # Build a dummy comprehensive report to satisfy the new UI
+    # Build a dummy comprehensive report to satisfy the new UI, but highly professional
     comprehensive_report = {
         "resumeScore": final_score,
-        "careerReadiness": "Good" if final_score > 70 else "Needs Work",
-        "strengths": ["Found some technical skills"] if keyword_score > 20 else [],
+        "careerReadiness": "Strong Candidate" if final_score > 70 else "Requires Refinement",
+        "strengths": ["Demonstrates baseline technical vocabulary", "Clear attempt at structuring professional narrative"] if keyword_score > 10 else ["Basic structural elements present"],
         "improvements": [
-            {"title": "Add Achievements", "description": "Add more quantifiable achievements.", "priority": "High"} if not has_experience else {"title": "Update Skills", "description": "Ensure your skills are up to date.", "priority": "Low"},
-            {"title": "Add Summary", "description": "Include a strong professional summary.", "priority": "High"} if not has_objective else {"title": "Refine Summary", "description": "Make sure your summary is impactful.", "priority": "Low"}
+            {"title": "Quantify Business Impact", "description": "FAANG recruiters look for metrics (e.g., 'Scaled system to handle 10k RPS'). Convert responsibilities into measurable achievements.", "priority": "High"} if not has_experience else {"title": "Modernize Tech Stack", "description": "Ensure your featured skills align with current enterprise industry standards.", "priority": "Medium"},
+            {"title": "Executive Summary", "description": "Transform your objective into a high-impact executive summary detailing your engineering philosophy.", "priority": "High"} if not has_objective else {"title": "Refine Value Proposition", "description": "Sharpen your summary to immediately communicate your unique engineering value.", "priority": "Medium"}
         ],
         "atsOptimization": {
             "score": keyword_score,
             "missingKeywords": missing[:5],
             "matchedKeywords": matched,
-            "suggestions": ["Include more industry-standard keywords from the job description."]
+            "suggestions": ["Integrate missing enterprise-grade keywords contextually within bullet points, avoiding keyword stuffing."]
         },
         "skillGaps": [
-            {"skill": kw, "priority": "Medium", "reason": "Commonly requested in this field."} for kw in missing[:3]
+            {"skill": kw, "priority": "High", "reason": "Critical prerequisite for senior/mid-level engineering roles."} for kw in missing[:3]
         ],
         "jobRecommendations": [
-            {"role": "Software Developer", "matchPercentage": final_score, "reason": "Based on your technical keywords."}
+            {"role": "Enterprise Software Engineer", "matchPercentage": final_score, "reason": "Alignment with core foundational technologies."}
         ],
         "learningRecommendations": [
-            {"skill": "Cloud Computing (AWS/Docker)", "reason": "Highly demanded in tech right now.", "priority": "Medium"}
+            {"skill": "System Design & Scalability", "reason": "Essential for passing rigorous technical interviews at top-tier tech companies.", "priority": "High"}
         ],
         "interviewPreparation": {
-            "technicalTopics": ["Data Structures", "System Design"],
-            "questions": ["Can you describe a challenging project?", "How do you handle conflict?"]
+            "technicalTopics": ["Distributed Systems", "Data Structures & Algorithms", "Microservices Architecture"],
+            "questions": ["Walk me through a time you had to architect a system for high availability.", "How do you approach debugging a production incident at scale?"]
         },
         "roadmap": {
-            "days30": ["Update resume", "Practice coding challenges"],
-            "days60": ["Apply for roles", "Do mock interviews"],
-            "days90": ["Evaluate offers", "Prepare for onboarding"]
+            "days30": ["Rewrite bullet points using the STAR method (Situation, Task, Action, Result).", "Audit portfolio for UX/UI inconsistencies."],
+            "days60": ["Complete 20 advanced LeetCode problems.", "Conduct mock system design interviews."],
+            "days90": ["Begin strategic outreach to engineering managers.", "Prepare for behavioral leadership rounds."]
         },
         "nextBestActions": [
-            "Add missing keywords to your resume.",
-            "Start applying for junior/mid-level roles."
+            "Inject quantifiable metrics (%, $, scale) into your work experience.",
+            "Elevate the technical depth of your project descriptions."
         ]
     }
     
@@ -129,7 +96,7 @@ def _fallback_calculate_ats_score(text):
         "score": final_score,
         "matched_keywords": matched,
         "missing_keywords": missing,
-        "feedback": "Your resume was analyzed across 5 crucial dimensions (Fallback algorithm).",
+        "feedback": "Executive Analysis: Document parsed using heuristic fallback. Found baseline formatting, but lacks deep quantifiable impact required for top-tier roles.",
         "comprehensive_report": comprehensive_report
     }
 
@@ -140,39 +107,30 @@ def calculate_ats_score(text, doc_type='resume'):
         return _fallback_calculate_ats_score(text)
         
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        client = genai.Client(api_key=api_key)
         
         if doc_type == 'portfolio':
-            prompt_context = "PORTFOLIO text (projects, case studies, technical depth, live links)"
-            feedback_context = "portfolio's strengths and weaknesses"
-            schema_experience = "Detailed feedback on their projects, case studies, and impact."
-            schema_education = "Feedback on continuous learning, certifications, or depth of case studies."
-            schema_objectives = "Feedback on overall presentation, UI/UX, and clarity."
+            prompt_context = "SOFTWARE ENGINEERING PORTFOLIO (projects, system architecture, UX/UI, technical depth, live links)"
         else:
-            prompt_context = "resume text"
-            feedback_context = "resume's strengths and weaknesses"
-            schema_experience = "Detailed feedback on their work experience."
-            schema_education = "Feedback on education."
-            schema_objectives = "Feedback on professional summary."
+            prompt_context = "SOFTWARE ENGINEER RESUME"
 
         prompt = f"""
-You are an expert ATS (Applicant Tracking System) algorithm and a Senior Technical Recruiter.
-Analyze the following {prompt_context} and provide a highly accurate, structured JSON evaluation.
+You are an elite Principal Engineer and a Senior Technical Recruiter at a FAANG company.
+You are evaluating this candidate's {prompt_context}. Provide a brutally honest, highly professional, enterprise-grade analysis.
 Do NOT wrap the response in markdown blocks like ```json. Return ONLY valid, raw JSON.
 
 The JSON MUST exactly match this structure:
 {{
-  "resumeScore": <int between 0 and 100>,
-  "careerReadiness": "Excellent" | "Good" | "Fair" | "Needs Work",
+  "resumeScore": <int between 0 and 100 based on rigorous FAANG standards>,
+  "careerReadiness": "Exceptional" | "Strong" | "Requires Refinement" | "Junior Level",
   "strengths": [
     "strength 1",
     "strength 2"
   ],
   "improvements": [
     {{
-      "title": "Short title",
-      "description": "Actionable description",
+      "title": "Short title (e.g., Quantify Impact)",
+      "description": "Harsh but professional actionable description",
       "priority": "High" | "Medium" | "Low"
     }}
   ],
@@ -186,26 +144,26 @@ The JSON MUST exactly match this structure:
     {{
       "skill": "skill name",
       "priority": "High" | "Medium" | "Low",
-      "reason": "Why this is needed"
+      "reason": "Why this is a red flag for senior roles"
     }}
   ],
   "jobRecommendations": [
     {{
-      "role": "Job Title",
+      "role": "Specific Job Title",
       "matchPercentage": <int 0-100>,
-      "reason": "Why it matches"
+      "reason": "Why they fit this echelon"
     }}
   ],
   "learningRecommendations": [
     {{
-      "skill": "Topic to learn",
+      "skill": "Advanced Topic (e.g., Distributed Systems)",
       "reason": "Why to learn it",
       "priority": "High" | "Medium" | "Low"
     }}
   ],
   "interviewPreparation": {{
     "technicalTopics": ["topic1", "topic2"],
-    "questions": ["Question 1", "Question 2"]
+    "questions": ["Extremely difficult FAANG interview question 1", "Question 2"]
   }},
   "roadmap": {{
     "days30": ["action 1", "action 2"],
@@ -218,14 +176,15 @@ The JSON MUST exactly match this structure:
   ]
 }}
 
-Analyze this document text and provide personalized, actionable career suggestions. 
-Avoid generic advice. Be concise and prioritize actionable recommendations over explanations.
-Do not invent experience.
+Analyze this document text and provide personalized, actionable, top-tier engineering feedback. Focus heavily on system design, quantifiable metrics, business impact, and modern tech stacks.
 ---
-{text[:5000]}
+{text[:6000]}
 ---
 """
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         response_text = response.text.strip()
         
         # Extract json using regex if there's markdown
@@ -236,15 +195,14 @@ Do not invent experience.
             
         result_json = json.loads(response_text)
         
-        # Map back to old expected format for ATSResult, and save the full new format in detailed_report
         ats_score = result_json.get('resumeScore', 0)
         ats_opt = result_json.get('atsOptimization', {})
         matched = ats_opt.get('matchedKeywords', [])
         missing = ats_opt.get('missingKeywords', [])
         
-        feedback = f"Career Readiness: {result_json.get('careerReadiness', 'Unknown')}. "
+        feedback = f"Executive Analysis: {result_json.get('careerReadiness', 'Unknown')}. "
         if result_json.get('strengths'):
-            feedback += f"Strengths: {', '.join(result_json['strengths'][:2])}. "
+            feedback += f"Key Strengths: {', '.join(result_json['strengths'][:2])}. "
             
         return {
             "score": ats_score,
